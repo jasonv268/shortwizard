@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from shortwizard.utils import Effect
 
 
 class Item(ABC):
@@ -6,8 +7,7 @@ class Item(ABC):
     def __init__(self, text_content):
         self.text_content = text_content
         self.tts_path = None
-        self.before_sound_effect_path = None
-        self.after_sound_effect_path = None
+        self.effects: list[Effect.Effect ]= []
         self.pause_duration = 0
         self.font_size = 48
         self.chars_per_line = 30
@@ -28,14 +28,11 @@ class Item(ABC):
     def get_pause_duration(self):
         return self.pause_duration
     
-    def has_sound_effect_path(self):
-        return len(self.sound_effect_paths)>0
+    def has_effects(self):
+        return len(self.effects)>0
     
-    def get_sound_effects_paths(self):
-        return self.sound_effect_paths
-
-    def add_sound_effect_path(self, sound_effect_path):
-        self.sound_effect_paths = sound_effect_path
+    def get_effects(self)->list[Effect.Effect]:
+        return self.effects
 
     def get_font_size(self):
         return self.font_size

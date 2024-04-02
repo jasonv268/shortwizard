@@ -1,5 +1,6 @@
 import json
 from shortwizard.utils.Item import Item
+from shortwizard.utils import Effect
 
 from shortwizard.config import root
 from pathlib import Path
@@ -16,9 +17,13 @@ class Question(Item):
 
         self.chars_per_line = 22
 
-        self.before_sound_effect_path = root / Path("assets/audio_effects/swoosh.mp3")
+        self.position = ("center", 700)
 
-        self.after_sound_effect_path = root / Path("assets/audio_effects/clock.mp3")
+        self.effects = [Effect.AudioEffect(root / Path("assets/audio_effects/swoosh.mp3"), 2,-1),
+                        Effect.AudioEffect(
+            root / Path("assets/audio_effects/clock.mp3"), self.pause_duration-0.5 ,"TTSEND"),
+            Effect.VideoEffect(root / Path("assets/video/chrono.mp4"), self.pause_duration+0.5, "TTSEND", (200, 200))]
+
 
 class Reponse(Item):
     def __init__(self, text_content):
@@ -29,6 +34,8 @@ class Reponse(Item):
         self.font_size = 70
 
         self.chars_per_line = 22
+
+        self.position = ("center", 700)
 
 
 class Titre(Item):
@@ -41,6 +48,10 @@ class Titre(Item):
 
         self.chars_per_line = 15
 
+        self.position = ("center", 200)
+
+        self.effects = [Effect.VideoEffect(root / Path("assets/video/follow.mp4"), self.pause_duration+2, -1, ("center", 1000))]
+
 
 class Quizz:
 
@@ -52,7 +63,7 @@ class Quizz:
 
         self.quizz_name = json_quizz["titre"]
 
-        self.quizz_items = [Titre(json_quizz["titre"])]
+        self.quizz_items:list[Item] = [Titre(json_quizz["titre"])]
 
         for item in json_quizz["questions"]:
             if "réponse" in item:
@@ -68,11 +79,10 @@ class Quizz:
         return self.quizz_items.pop(0)
 
     def has_next_item(self):
-        return len(self.quizz_elements) > 0
-    
+        return len(self.quizz_items) > 0
+
     def get_all_items(self):
         return self.quizz_items
-    
 
 
 class QuizzsManager:

@@ -15,7 +15,7 @@ def create_audio_and_text(item_list: list[Item], abm: AudioBackgroundsManager.Au
 
     time = 1
 
-    text_clip_list = []
+    video_clip_list = []
 
     for item in item_list:
         audio_part = mpe.AudioFileClip(item.get_tts_path())
@@ -23,22 +23,21 @@ def create_audio_and_text(item_list: list[Item], abm: AudioBackgroundsManager.Au
 
         sound_effects = []
 
-        if item.before_sound_effect_path is not None:
-            sound_effect = mpe.AudioFileClip(item.before_sound_effect_path)
-            sound_effect = sound_effect.set_start(time-1)
-            sound_effects.append(sound_effect)
+        if item.has_effects():
 
-        if item.after_sound_effect_path is not None:
-            sound_effect = mpe.AudioFileClip(item.after_sound_effect_path)
-            sound_effect = sound_effect.set_start(time+audio_part.duration)
-            sound_effect: mpe.AudioFileClip = sound_effect.set_duration(
-                item.get_pause_duration()-1)
-            sound_effects.append(sound_effect)
+            effects = item.get_effects()
+
+            audio_effects_clip, video_effects_clip = editor_assets.create_effects(
+                effects, time, audio_part.duration)
+
+            sound_effects += audio_effects_clip
+
+            video_clip_list += video_effects_clip
 
         audio_clip = mpe.CompositeAudioClip(
             [audio_clip, audio_part]+sound_effects)
 
-        text_clip_list += editor_assets.create_text_clip_list(
+        video_clip_list += editor_assets.create_text_clip_list(
             item.get_text_content(), item.get_position(), time, time+audio_part.duration+item.get_pause_duration(), item.get_font_size(), item.get_chars_per_line())
 
         time = time + audio_part.duration + item.get_pause_duration()
@@ -46,7 +45,7 @@ def create_audio_and_text(item_list: list[Item], abm: AudioBackgroundsManager.Au
     audio_clip = audio_clip.subclip(0, time)
     audio_clip = editor_assets.fade_in_out_audio(audio_clip)
 
-    return audio_clip, text_clip_list
+    return audio_clip, video_clip_list
 
 
 def create_bg(vbm: VideoBackgroundsManager.VideoBackgoundsManager, short_duration):
@@ -78,11 +77,8 @@ def create_bg(vbm: VideoBackgroundsManager.VideoBackgoundsManager, short_duratio
 
 def write_final_render(bg_clip, text_clip_list, audio_clip, output_dir, file_name):
 
-    follow_clip = editor_assets.edit_anim(
-        root / Path("assets/video/follow.mp4"), 0, 7)
-
     final_render = mpe.CompositeVideoClip(
-        [bg_clip, follow_clip]+text_clip_list).set_audio(audio_clip)
+        [bg_clip]+text_clip_list, bg_color=None).set_audio(audio_clip)
 
     final_render.write_videofile(
         os.path.normpath(Path(output_dir) / Path(f"{file_name}.mp4")), codec="libx264", fps=24)
