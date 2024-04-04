@@ -1,9 +1,12 @@
 import json
+import random
 from shortwizard.utils.Item import Item
 from shortwizard.utils import Effect
 
 from shortwizard.config import root
 from pathlib import Path
+
+
 
 
 class Question(Item):
@@ -19,10 +22,13 @@ class Question(Item):
 
         self.position = ("center", 700)
 
-        self.effects = [Effect.AudioEffect(root / Path("shortwizard/assets/audio_effects/swoosh.mp3"), 2,-1.2),
-                        Effect.AudioEffect(root / Path("shortwizard/assets/audio_effects/clock.mp3"), self.pause_duration-1 ,"TTSEND"),
-                        Effect.VideoEffect(root / Path("shortwizard/assets/video/chrono.mp4"), self.pause_duration-0.2, "TTSEND", (200, 200),(138, 255, 2)),
-                        Effect.VideoEffect(root / Path("shortwizard/assets/video/ne_sait_pas_homme.mp4"), self.pause_duration-0.5, 3, ("center", 1500),(4, 253, 45))]
+        emotes = ["ne_sait_pas_homme","ne_sait_pas_femme","bizzare","langue","sourire","sun_glasses","explosion","clin_doeil"]
+
+        random_emote = emotes[random.randint(0,len(emotes)-1)]
+
+        self.effects = [Effect.AudioEffect(root / Path("shortwizard/assets/audio_effects/swoosh.mp3"), 2,-1.2, 1),
+                        Effect.VideoEffect(root / Path("shortwizard/assets/video/chrono.mp4"), self.pause_duration-0.2, "TTSEND", (200, 200),(138, 255, 2),0.1),
+                        Effect.VideoEffect(root / Path(f"shortwizard/assets/video/{random_emote}.mp4"), self.pause_duration, 2, ("center", 1500),(4, 253, 45),0)]
 
 
 class Reponse(Item):
@@ -50,7 +56,8 @@ class Titre(Item):
 
         self.position = ("center", 200)
 
-        self.effects = [Effect.VideoEffect(root / Path("shortwizard/assets/video/follow.mp4"), 11, -1, ("center", 1000),(138, 255, 2))]
+        self.effects = [Effect.VideoEffect(root / Path("shortwizard/assets/video/follow.mp4"), 11, -1, ("center", 1000),(138, 255, 2),1.0),
+                        Effect.VideoEffect(root / Path("shortwizard/assets/video/bizzare.mp4"), self.pause_duration+1, 0, ("center", 1500),(4, 253, 45),0)]
 
 class Quizz:
 

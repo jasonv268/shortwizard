@@ -82,11 +82,10 @@ def write_final_render(bg_clip, text_clip_list, audio_clip, output_dir, file_nam
     
     outro = editor_assets.fade_in_out_bg(outro)
 
-    outro_audio = mpe.AudioFileClip(
-        root / Path("shortwizard/assets/audio_effects/outro.mp3"))
-
     final_render: mpe.CompositeVideoClip = mpe.CompositeVideoClip(
-        [mpe.concatenate_videoclips([bg_clip,outro])]+text_clip_list, bg_color=None).set_audio(mpe.concatenate_audioclips([audio_clip,outro_audio]))
+        [mpe.concatenate_videoclips([bg_clip,outro])]+text_clip_list, bg_color=None)
+    
+    final_render = final_render.set_audio(mpe.CompositeAudioClip([final_render.audio, audio_clip]))
 
     final_render.write_videofile(
-        os.path.normpath(Path(output_dir) / Path(f"{file_name}.mp4")),codec="libx264", threads=12, fps=24)
+        os.path.normpath(Path(output_dir) / Path(f"{file_name}.mp4")),codec="libx265", threads=12, fps=30)

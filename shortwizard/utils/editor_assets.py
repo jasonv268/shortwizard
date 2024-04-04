@@ -212,6 +212,9 @@ def create_effects(effects: list[Effect.Effect], start_time, tts_duration):
 
             sound_effect = sound_effect.set_duration(
                 min(effect.get_duration(), sound_effect.duration))
+            
+            sound_effect = sound_effect.volumex(effect.get_volume())
+
             audio_clip_list.append(sound_effect)
 
         elif isinstance(effect, Effect.ImageEffect):
@@ -245,6 +248,8 @@ def create_effects(effects: list[Effect.Effect], start_time, tts_duration):
 
             video_effect: mpe.VideoFileClip = video_effect.set_duration(
                min(effect.get_duration(), video_effect.duration))
+            
+            video_effect = video_effect.volumex(effect.get_volume())
 
             video_clip_list.append(video_effect)
 
