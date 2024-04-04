@@ -25,24 +25,34 @@ class Effect(ABC):
 
 class VideoEffect(Effect):
 
-    def __init__(self,path,  duration, start_time, position):
+    def __init__(self,path,  duration, start_time, position, mask_color:tuple[int,int,int]):
         super().__init__(path, duration, start_time)
 
         self.position = position
 
+        self.mask_color = mask_color
+
     def get_position(self):
         return self.position
+    
+    def get_mask_color(self):
+        return self.mask_color
 
 
 class ImageEffect(Effect):
 
-    def __init__(self,path, duration, start_time, position):
+    def __init__(self,path, duration, start_time, position, mask_color:tuple[int,int,int]):
         super().__init__(path, duration, start_time)
 
         self.position = position
 
+        self.mask_color = mask_color
+
     def get_position(self):
         return self.position
+    
+    def get_mask_color(self):
+        return self.mask_color
 
 
 class AudioEffect(Effect):

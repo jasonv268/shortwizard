@@ -13,6 +13,6 @@ def edit_classic(video_backgrounds_dir_path: Path, audio_backgrounds_dir_path: P
     pass
 
 
-def edit_quizz(video_backgrounds_dir_path: Path, audio_backgrounds_dir_path: Path, sound_effects_dir_path: Path, quizzs_path: Path, output_path: Path, lang: str,) -> None:
-    editorQuizz.make_shorts(video_backgrounds_dir_path, audio_backgrounds_dir_path, sound_effects_dir_path, quizzs_path,lang, output_path)
+def edit_quizz(video_backgrounds_dir_path: Path, quizzs_path: Path, output_path: Path, lang: str,) -> None:
+    editorQuizz.make_shorts(video_backgrounds_dir_path, quizzs_path,lang, output_path)
     

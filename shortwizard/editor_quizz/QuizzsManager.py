@@ -11,7 +11,7 @@ class Question(Item):
     def __init__(self, text_content):
         super().__init__(text_content)
 
-        self.pause_duration = 4
+        self.pause_duration = 4.5
 
         self.font_size = 70
 
@@ -19,17 +19,17 @@ class Question(Item):
 
         self.position = ("center", 700)
 
-        self.effects = [Effect.AudioEffect(root / Path("assets/audio_effects/swoosh.mp3"), 2,-1),
-                        Effect.AudioEffect(
-            root / Path("assets/audio_effects/clock.mp3"), self.pause_duration-0.5 ,"TTSEND"),
-            Effect.VideoEffect(root / Path("assets/video/chrono.mp4"), self.pause_duration+0.5, "TTSEND", (200, 200))]
+        self.effects = [Effect.AudioEffect(root / Path("shortwizard/assets/audio_effects/swoosh.mp3"), 2,-1.2),
+                        Effect.AudioEffect(root / Path("shortwizard/assets/audio_effects/clock.mp3"), self.pause_duration-1 ,"TTSEND"),
+                        Effect.VideoEffect(root / Path("shortwizard/assets/video/chrono.mp4"), self.pause_duration-0.2, "TTSEND", (200, 200),(138, 255, 2)),
+                        Effect.VideoEffect(root / Path("shortwizard/assets/video/ne_sait_pas_homme.mp4"), self.pause_duration-0.5, 3, ("center", 1500),(4, 253, 45))]
 
 
 class Reponse(Item):
     def __init__(self, text_content):
         super().__init__(text_content)
 
-        self.pause_duration = 3
+        self.pause_duration = 1.5
 
         self.font_size = 70
 
@@ -42,7 +42,7 @@ class Titre(Item):
     def __init__(self, text_content):
         super().__init__(text_content)
 
-        self.pause_duration = 2
+        self.pause_duration = 1.5
 
         self.font_size = 90
 
@@ -50,12 +50,11 @@ class Titre(Item):
 
         self.position = ("center", 200)
 
-        self.effects = [Effect.VideoEffect(root / Path("assets/video/follow.mp4"), self.pause_duration+2, -1, ("center", 1000))]
-
+        self.effects = [Effect.VideoEffect(root / Path("shortwizard/assets/video/follow.mp4"), 11, -1, ("center", 1000),(138, 255, 2))]
 
 class Quizz:
 
-    def __init__(self, json_quizz):
+    def __init__(self, json_quizz, number):
         if "titre" not in json_quizz:
             raise ValueError("JSON object does not have 'Titre' attribute")
         if "questions" not in json_quizz:
@@ -64,6 +63,8 @@ class Quizz:
         self.quizz_name = json_quizz["titre"]
 
         self.quizz_items:list[Item] = [Titre(json_quizz["titre"])]
+
+        self.number = number
 
         for item in json_quizz["questions"]:
             if "réponse" in item:
@@ -74,6 +75,9 @@ class Quizz:
 
     def get_title(self):
         return self.quizz_name
+    
+    def get_number(self):
+        return self.number
 
     def get_next_item(self):
         return self.quizz_items.pop(0)
@@ -94,7 +98,7 @@ class QuizzsManager:
         with open(quizzs_path, encoding="utf-8") as text_bank:
             json_quizzs_list = json.load(text_bank)
 
-            self.quizzs = [Quizz(quizz) for quizz in json_quizzs_list]
+            self.quizzs = [Quizz(quizz, index) for index,quizz in enumerate(json_quizzs_list)]
 
     def get_group_name(self):
         return self.group_name

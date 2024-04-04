@@ -3,7 +3,7 @@ from shortwizard.editor_quizz import QuizzsManager
 from shortwizard.utils import file_manager, tts, editor, VideoBackgroundsManager, AudioBackgroundsManager
 
 
-def make_shorts(video_backgrounds_dir_path, audio_backgrounds_dir_path, sound_effects_dir_path, quizzs_path, language, output_path):
+def make_shorts(video_backgrounds_dir_path, quizzs_path, language, output_path):
 
     qm: QuizzsManager.QuizzsManager = QuizzsManager.QuizzsManager(quizzs_path)
 
@@ -15,28 +15,27 @@ def make_shorts(video_backgrounds_dir_path, audio_backgrounds_dir_path, sound_ef
     vbm = VideoBackgroundsManager.VideoBackgoundsManager(
         video_backgrounds_dir_path)
 
-    abm = AudioBackgroundsManager.AudioBackgroundsManager(
-        audio_backgrounds_dir_path)
-
     while qm.has_next_quizz():
 
         quizz = qm.get_next_quizz()
 
-        make_short(quizz, vbm, abm, language, output_dir)
+        make_short(quizz, vbm, language, output_dir)
 
 
-def make_short(quizz: QuizzsManager.Quizz, vbm: VideoBackgroundsManager.VideoBackgoundsManager, abm: AudioBackgroundsManager.AudioBackgroundsManager, language, output_path):
+def make_short(quizz: QuizzsManager.Quizz, vbm: VideoBackgroundsManager.VideoBackgoundsManager, language, output_path):
 
     temp_folder = file_manager.create_temp_folder()
 
     tts.generate_voices(quizz.get_all_items(), language, temp_folder)
 
     audio_clip, text_clip = editor.create_audio_and_text(
-        quizz.get_all_items(), abm)
+        quizz.get_all_items())
 
-    bg_video = editor.create_bg(vbm, audio_clip.duration+2)
+    bg_video = editor.create_bg(vbm, audio_clip.duration)
+
+    file_name = f"{quizz.get_number()}_{quizz.get_title()}"
 
     editor.write_final_render(
-        bg_video, text_clip, audio_clip, output_path, quizz.get_title())
+        bg_video, text_clip, audio_clip, output_path, file_name)
 
     file_manager.delete_folder(temp_folder)

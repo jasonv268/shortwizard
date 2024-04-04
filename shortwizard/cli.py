@@ -34,8 +34,7 @@ def editclassic(
     lang: str = typer.Option(default=None, help="IA language code."),
 ) -> None:
     typer.echo(
-        f"Editing {video_backgrounds_dir_path}, {
-            audio_backgrounds_dir_path}, {texts_path}, {lang}"
+        f"Editing {video_backgrounds_dir_path}, {audio_backgrounds_dir_path}, {texts_path}, {lang}"
     )
     # shortwizard.edit_classic(
     #      video_backgrounds_dir_path, audio_backgrounds_dir_path, texts_path,Path.cwd(), lang
@@ -51,17 +50,14 @@ def _version_callback(value: bool) -> None:
 @app.command()
 def editquizz(
     video_backgrounds_dir_path: Path,
-    audio_backgrounds_dir_path: Path,
-    sound_effects_dir_path: Path,
     quizzs_path: Path,
     lang: str = typer.Option(default=None, help="IA language code."),
 ) -> None:
     typer.echo(
-        f"Editing Quizzs {video_backgrounds_dir_path}, {audio_backgrounds_dir_path}, {
-            sound_effects_dir_path},{quizzs_path}, {lang}"
+        f"Editing Quizzs {video_backgrounds_dir_path},{quizzs_path}, {lang}"
     )
     shortwizard.edit_quizz(
-        video_backgrounds_dir_path, audio_backgrounds_dir_path, sound_effects_dir_path, quizzs_path, Path.cwd(), lang
+        video_backgrounds_dir_path, quizzs_path, Path.cwd(), lang
     )
 
 
