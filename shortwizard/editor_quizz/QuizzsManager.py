@@ -27,7 +27,7 @@ class Question(Item):
         random_emote = emotes[random.randint(0,len(emotes)-1)]
 
         self.effects = [Effect.AudioEffect(root / Path("shortwizard/assets/audio_effects/swoosh.mp3"), 2,-1.2, 1),
-                        Effect.VideoEffect(root / Path("shortwizard/assets/video/chrono.mp4"), self.pause_duration-0.2, "TTSEND", (200, 200),(138, 255, 2),0.1),
+                        Effect.VideoEffect(root / Path("shortwizard/assets/video/chrono.mp4"), self.pause_duration-0.2, "TTSEND", (200, 200),(138, 255, 2),0.02),
                         Effect.VideoEffect(root / Path(f"shortwizard/assets/video/{random_emote}.mp4"), self.pause_duration, 2, ("center", 1500),(4, 253, 45),0)]
 
 
