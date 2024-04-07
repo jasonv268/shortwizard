@@ -7,9 +7,9 @@ from pathlib import Path
 from shortwizard.config import root
 
 
-def create_audio_and_text(item_list: list[Item]):
+def create_audio_and_text(item_list: list[Item], text_clip_function):
 
-    time = 1
+    time = 0.5
 
     audio_clip_list = []
 
@@ -35,11 +35,9 @@ def create_audio_and_text(item_list: list[Item]):
         
         audio_clip_list.append(audio_part)
         audio_clip_list = audio_clip_list + sound_effects
-        # audio_clip = mpe.CompositeAudioClip(
-        #     [audio_clip, audio_part]+sound_effects)
 
-        video_clip_list += editor_assets.create_text_clip_list(
-            item.get_text_content().upper(), item.get_position(), time, time+audio_part.duration+item.get_pause_duration(), item.get_font_size(), item.get_chars_per_line())
+        video_clip_list += text_clip_function(
+            item.get_text_content().upper(), item.get_position(), time, time+audio_part.duration, item.get_font_size(), item.get_chars_per_line())
 
         time = time + audio_part.duration + item.get_pause_duration()
 
@@ -77,15 +75,10 @@ def create_bg(vbm: VideoBackgroundsManager.VideoBackgoundsManager, short_duratio
 
 def write_final_render(bg_clip, text_clip_list, audio_clip, output_dir, file_name):
 
-    outro = mpe.VideoFileClip(
-        root / Path("shortwizard/assets/video/outro.mp4"), audio=True)
-    
-    outro = editor_assets.fade_in_out_bg(outro)
-
     final_render: mpe.CompositeVideoClip = mpe.CompositeVideoClip(
-        [mpe.concatenate_videoclips([bg_clip,outro])]+text_clip_list, bg_color=None)
+        [bg_clip]+text_clip_list, bg_color=None)
     
     final_render = final_render.set_audio(mpe.CompositeAudioClip([final_render.audio, audio_clip]))
 
     final_render.write_videofile(
-        os.path.normpath(Path(output_dir) / Path(f"{file_name}.mp4")),codec="libx265", threads=12, fps=30)
+        os.path.normpath(Path(output_dir) / Path(f"{file_name}.mp4")),codec="libx264", threads=4, fps=24)

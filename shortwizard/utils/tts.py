@@ -18,7 +18,7 @@ def generate_voices(item_list: list[Item], lang: str, output_dir: str):
         audio = AudioSegment.from_mp3(tts_path)
 
         # Accélérer le son par un facteur de 1.1
-        audio_accelere = audio.speedup(playback_speed=1.2)
+        audio_accelere = audio.speedup(playback_speed=1.3)
 
         # Écraser le fichier audio original avec le fichier audio accéléré
         audio_accelere.export(tts_path, format="mp3")
