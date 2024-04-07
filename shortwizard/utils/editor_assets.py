@@ -110,48 +110,6 @@ def create_text_display(text_list, position, audio_config):
     return text_clip_list
 
 
-def create_text_clip_list(text, position, t1, t2, font_size, chars_per_line):
-
-    def diviser_texte(texte, longueur_max):
-        mots = texte.split(' ')
-        parties = []
-        partie_actuelle = ""
-
-        for mot in mots:
-            if len(partie_actuelle) + len(mot) + 1 <= longueur_max:  # Ajoute 1 pour l'espace
-                if partie_actuelle:  # Ajoute un espace si nécessaire
-                    partie_actuelle += " "
-                partie_actuelle += mot
-            else:
-                parties.append(partie_actuelle)
-                partie_actuelle = mot
-
-        if partie_actuelle:  # Ajoute la dernière partie
-            parties.append(partie_actuelle)
-
-        return parties
-
-    list = diviser_texte(text, chars_per_line)
-
-    text_clip_list = []
-
-    for index, t in enumerate(list):
-        text_clip = mpe.TextClip(txt=t, fontsize=font_size, color='white', stroke_color='black',
-                                 stroke_width=5, font='Tiktok-Bold')
-
-        text_clip = text_clip.set_position(
-            (position[0], position[1]+index*font_size*2)).set_duration((t2-t1)).set_start(t1-1)
-
-        text_fadein = text_clip.crossfadein(0.5)
-
-        # Appliquer un fondu en sortie
-        text_fadeout = text_fadein.crossfadeout(0.5)
-
-        text_clip_list.append(text_fadeout)
-
-    return text_clip_list
-
-
 def edit_anim(path, start_time, end_time):
     follow_clip = mpe.VideoFileClip(path)
 
@@ -191,7 +149,6 @@ def remove_green_screen(clip, effect: Effect.VideoEffect):
     return anim
 
 
-
 def create_effects(effects: list[Effect.Effect], start_time, tts_duration):
 
     audio_clip_list, video_clip_list = [], []
@@ -212,14 +169,15 @@ def create_effects(effects: list[Effect.Effect], start_time, tts_duration):
 
             sound_effect = sound_effect.set_duration(
                 min(effect.get_duration(), sound_effect.duration))
-            
+
             sound_effect = sound_effect.volumex(effect.get_volume())
 
             audio_clip_list.append(sound_effect)
 
         elif isinstance(effect, Effect.ImageEffect):
 
-            image_effect = mpe.ImageClip(effect.get_effect_path(),effect.get_position())
+            image_effect = mpe.ImageClip(
+                effect.get_effect_path(), effect.get_position())
             image_effect = image_effect.set_position(effect.get_position())
 
             if effect.get_start_time() == "TTSEND":
@@ -247,8 +205,8 @@ def create_effects(effects: list[Effect.Effect], start_time, tts_duration):
                     effect.get_start_time()+start_time)
 
             video_effect: mpe.VideoFileClip = video_effect.set_duration(
-               min(effect.get_duration(), video_effect.duration))
-            
+                min(effect.get_duration(), video_effect.duration))
+
             video_effect = video_effect.volumex(effect.get_volume())
 
             video_clip_list.append(video_effect)
