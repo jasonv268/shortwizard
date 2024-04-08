@@ -1,6 +1,8 @@
 import moviepy.editor as mpe
 import random
 
+from shortwizard.utils import editor_assets
+
 
 def diviser_texte(texte, longueur_max):
     mots = texte.split(' ')
@@ -65,7 +67,7 @@ def create_text_clip_list_dynamic(text, position, t1, t2, font_size, chars_per_l
 
     text_clip_list = []
 
-    #Vert Bleu Jaune Orange Rouge
+    # Vert Bleu Jaune Orange Rouge
 
     colors = ["rgba(55,226,101,255)", "rgba(68,143,234,255)",
               "rgba(251,221,22,255)", "rgba(244,171,40,255)", "rgba(255,22,0,255)"]
@@ -95,6 +97,9 @@ def create_text_clip_list_dynamic(text, position, t1, t2, font_size, chars_per_l
         text_clip = text_clip.set_position(
             (position[0], position[1])).set_duration(delta_per_two_lines/2).set_start(t1+index*delta_per_two_lines)
 
+        text_clip = text_clip.resize(lambda t: editor_assets.resize(t,delta_per_two_lines/2))
+
+        #1
         text_clip_list.append(text_clip)
 
         text_clip = mpe.TextClip(txt=text1, fontsize=font_size, color="white", stroke_color='black',
@@ -103,6 +108,7 @@ def create_text_clip_list_dynamic(text, position, t1, t2, font_size, chars_per_l
         text_clip = text_clip.set_position(
             (position[0], position[1])).set_duration(delta_per_two_lines/2).set_start(t1+index*delta_per_two_lines+delta_per_two_lines/2)
 
+        #2
         text_clip_list.append(text_clip)
 
         text_clip = mpe.TextClip(txt=text2, fontsize=font_size, color="white", stroke_color='black',
@@ -111,6 +117,7 @@ def create_text_clip_list_dynamic(text, position, t1, t2, font_size, chars_per_l
         text_clip = text_clip.set_position(
             (position[0], position[1]+font_size*2)).set_duration(delta_per_two_lines/2).set_start(t1+index*delta_per_two_lines)
 
+        #3
         text_clip_list.append(text_clip)
 
         text_clip = mpe.TextClip(txt=text2, fontsize=font_size, color=color, stroke_color='black',
@@ -119,6 +126,8 @@ def create_text_clip_list_dynamic(text, position, t1, t2, font_size, chars_per_l
         text_clip = text_clip.set_position(
             (position[0], position[1]+font_size*2)).set_duration(delta_per_two_lines/2).set_start(t1+index*delta_per_two_lines+delta_per_two_lines/2)
 
+        text_clip = text_clip.resize(lambda t: editor_assets.resize(t, delta_per_two_lines/2))
+        #4
         text_clip_list.append(text_clip)
 
     if last_text:

@@ -7,7 +7,7 @@ from typing import Optional
 import typer
 
 from shortwizard import ERRORS, __app_name__, __version__, config
-from shortwizard import shortwizard
+from shortwizard.editor_quizz import editorQuizz
 
 app = typer.Typer()
 
@@ -29,16 +29,14 @@ def init() -> None:
 @app.command()
 def editclassic(
     video_backgrounds_dir_path: Path,
-    audio_backgrounds_dir_path: Path,
-    texts_path: Path,
+    quizzs_path: Path,
     lang: str = typer.Option(default=None, help="IA language code."),
 ) -> None:
     typer.echo(
-        f"Editing {video_backgrounds_dir_path}, {audio_backgrounds_dir_path}, {texts_path}, {lang}"
+        f"Editing Quizzs {video_backgrounds_dir_path},{quizzs_path}, {lang}"
     )
-    # shortwizard.edit_classic(
-    #      video_backgrounds_dir_path, audio_backgrounds_dir_path, texts_path,Path.cwd(), lang
-    #  )
+    editorQuizz.make_shorts_classsic(video_backgrounds_dir_path,
+                                    quizzs_path, lang, Path.cwd())
 
 
 def _version_callback(value: bool) -> None:
@@ -56,9 +54,8 @@ def editquizz(
     typer.echo(
         f"Editing Quizzs {video_backgrounds_dir_path},{quizzs_path}, {lang}"
     )
-    shortwizard.edit_quizz(
-        video_backgrounds_dir_path, quizzs_path, Path.cwd(), lang
-    )
+    editorQuizz.make_shorts_dynamic(video_backgrounds_dir_path,
+                                    quizzs_path, lang, Path.cwd())
 
 
 def _version_callback(value: bool) -> None:

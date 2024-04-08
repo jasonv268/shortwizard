@@ -2,6 +2,7 @@ import json
 import random
 from shortwizard.utils.Item import Item
 from shortwizard.utils import Effect
+from shortwizard.utils.text_generator import get_random_food
 
 from shortwizard.config import root
 from pathlib import Path
@@ -49,7 +50,7 @@ class Titre(Item):
     def __init__(self, text_content):
         super().__init__(text_content)
 
-        self.pause_duration = 0.2
+        self.pause_duration = 0
 
         self.font_size = 90
 
@@ -67,16 +68,16 @@ class Annonce(Item):
     def __init__(self, text_content, emotes):
         super().__init__(text_content)
 
-        self.pause_duration = 0.1
+        self.pause_duration = 0
 
         self.font_size = 90
 
         self.chars_per_line = 15
 
-        self.position = ("center", 200)
+        self.position = ("center", 300)
 
         self.effects = [Effect.VideoEffect(
-            root / Path(f"shortwizard/assets/video/{emotes}.mp4"), 1.1, 0, ("center", -50), (4, 253, 45), 0)]
+            root / Path(f"shortwizard/assets/video/{emotes}.mp4"), 1.1, 0, ("center", 50), (4, 253, 45), 0)]
 
 
 class Quizz:
@@ -103,8 +104,11 @@ class Quizz:
             if index == 4:
                 self.quizz_items.append(
                     Annonce("Partage a tes amis !", "sourire"))
+
+                food = get_random_food()
                 self.quizz_items.append(
-                    Annonce("Celui qui a la moins bonne note te paye un kebab !", "langue"))
+                    Annonce(f"Celui qui a la moins bonne note te paye {food} !", "langue"))
+
                 self.quizz_items.append(
                     Annonce("On passe au niveau difficile !", "explosion"))
 

@@ -53,6 +53,17 @@ def fade_in_out_bg(bg_clip):
 
     return bg_clip
 
+def resize(t, duration):
+    # Starting scale factor
+    start_scale = 1
+    # End scale factor (the size to which the text should grow)
+    end_scale = 1.2
+
+    # Calculate the scaling factor based on elapsed time and total duration
+    scale_factor = start_scale + min(t / duration, 1.0) * (end_scale - start_scale)
+
+    return scale_factor
+
 
 def create_text(text, position, t1, t2, font_size, chars_per_line):
 
