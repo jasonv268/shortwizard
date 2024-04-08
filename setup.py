@@ -18,6 +18,8 @@ setup(
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
         packages=find_packages(),
+        include_package_data=True,
+
         install_requires=requirements, # add any additional packages that 
         # needs to be installed along with your package. Eg: 'caer'
         
