@@ -1,30 +1,25 @@
-from enum import Enum
 import time
-from shortwizard.editor_quizz import QuizzsManager
+from shortwizard.editor_quizz import Quizz
+from shortwizard.editor_quizz.QuizzsManager import QuizzsManager, QuizzType
 from shortwizard.utils import file_manager, tts, editor, VideoBackgroundsManager, AudioBackgroundsManager
 
 from shortwizard.editor_quizz.editorQuizz_assets import create_text_clip_list, create_text_clip_list_dynamic
 
 
-class Mode(Enum):
-    CLASSIC = 0
-    DYNAMIC = 1
-
-
-def make_shorts_classsic(video_backgrounds_dir_path, quizzs_path, language, output_path):
+def make_shorts_COUPLE(video_backgrounds_dir_path, quizzs_path, language, output_path):
 
     make_shorts(video_backgrounds_dir_path,
-                quizzs_path, language, output_path, Mode.CLASSIC)
+                quizzs_path, language, output_path, QuizzType.COUPLE)
 
 
-def make_shorts_dynamic(video_backgrounds_dir_path, quizzs_path, language, output_path):
+def make_shorts_DYNAMIC5Q(video_backgrounds_dir_path, quizzs_path, language, output_path):
 
     make_shorts(video_backgrounds_dir_path,
-                quizzs_path, language, output_path, Mode.DYNAMIC)
+                quizzs_path, language, output_path, QuizzType.DYNAMIC5Q)
 
 
-def make_shorts(video_backgrounds_dir_path, quizzs_path, language, output_path, mode):
-    qm: QuizzsManager.QuizzsManager = QuizzsManager.QuizzsManager(quizzs_path)
+def make_shorts(video_backgrounds_dir_path, quizzs_path, language, output_path, mode: QuizzType):
+    qm: QuizzsManager = QuizzsManager(quizzs_path, mode)
 
     todays_date = time.strftime("%Y_%m_%d_%Hh%Mm%Ss")
 
@@ -41,18 +36,14 @@ def make_shorts(video_backgrounds_dir_path, quizzs_path, language, output_path, 
         make_short(quizz, vbm, language, output_dir, mode)
 
 
-def make_short(quizz: QuizzsManager.Quizz, vbm: VideoBackgroundsManager.VideoBackgoundsManager, language, output_path, mode: Mode):
+def make_short(quizz: Quizz.Quizz, vbm: VideoBackgroundsManager.VideoBackgoundsManager, language, output_path, mode: QuizzType):
 
     temp_folder = file_manager.create_temp_folder()
 
     tts.generate_voices(quizz.get_all_items(), language, temp_folder)
 
-    if mode == mode.CLASSIC:
-        audio_clip, text_clip = editor.create_audio_and_text(
-            quizz.get_all_items(), create_text_clip_list)
-    elif mode == mode.DYNAMIC:
-        audio_clip, text_clip = editor.create_audio_and_text(
-            quizz.get_all_items(), create_text_clip_list_dynamic)
+    audio_clip, text_clip = editor.create_audio_and_text(
+        quizz.get_all_items(), create_text_clip_list_dynamic)
 
     bg_video = editor.create_bg(vbm, audio_clip.duration+1.5)
 

@@ -27,7 +27,7 @@ def init() -> None:
 
 
 @app.command()
-def editclassic(
+def edit_quizz_dynamic5Q(
     video_backgrounds_dir_path: Path,
     quizzs_path: Path,
     lang: str = typer.Option(default=None, help="IA language code."),
@@ -35,27 +35,22 @@ def editclassic(
     typer.echo(
         f"Editing Quizzs {video_backgrounds_dir_path},{quizzs_path}, {lang}"
     )
-    editorQuizz.make_shorts_classsic(video_backgrounds_dir_path,
-                                    quizzs_path, lang, Path.cwd())
-
-
-def _version_callback(value: bool) -> None:
-    if value:
-        typer.echo(f"{__app_name__} v{__version__}")
-        raise typer.Exit()
+    editorQuizz.make_shorts_DYNAMIC5Q(video_backgrounds_dir_path,
+                                      quizzs_path, lang, Path.cwd())
 
 
 @app.command()
-def editquizz(
+def edit_quizz_couple(
     video_backgrounds_dir_path: Path,
     quizzs_path: Path,
     lang: str = typer.Option(default=None, help="IA language code."),
 ) -> None:
     typer.echo(
-        f"Editing Quizzs {video_backgrounds_dir_path},{quizzs_path}, {lang}"
+        f"Editing Quizzs Couple{video_backgrounds_dir_path},{
+            quizzs_path}, {lang}"
     )
-    editorQuizz.make_shorts_dynamic(video_backgrounds_dir_path,
-                                    quizzs_path, lang, Path.cwd())
+    editorQuizz.make_shorts_COUPLE(video_backgrounds_dir_path,
+                                   quizzs_path, lang, Path.cwd())
 
 
 def _version_callback(value: bool) -> None:
