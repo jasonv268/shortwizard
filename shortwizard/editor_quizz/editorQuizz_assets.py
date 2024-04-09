@@ -138,6 +138,8 @@ def create_text_clip_list_dynamic(text, position, t1, t2, font_size, chars_per_l
 
         text_clip = text_clip.set_position(
             (position[0], position[1])).set_duration(delta_per_two_lines).set_start(t1+delta_per_two_lines*len(list_tuple))
+        
+        text_clip = text_clip.resize(lambda t: editor_assets.resize(t, delta_per_two_lines/2))
 
         text_clip_list.append(text_clip)
 
