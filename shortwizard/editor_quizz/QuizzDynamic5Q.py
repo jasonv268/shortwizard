@@ -1,6 +1,6 @@
 from shortwizard.editor_quizz.Quizz import Quizz
 from shortwizard.editor_quizz.quizz_items import Titre, Annonce, Question, Reponse
-from shortwizard.utils.text_generator import get_random_food
+from shortwizard.text_generator.text_generator import get_random_food
 
 class Quizz5Q(Quizz):
     def __init__(self, json_quizz, number):

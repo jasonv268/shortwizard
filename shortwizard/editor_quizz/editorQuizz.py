@@ -1,9 +1,15 @@
 import time
+
 from shortwizard.editor_quizz import Quizz
 from shortwizard.editor_quizz.QuizzsManager import QuizzsManager, QuizzType
-from shortwizard.utils import file_manager, tts, editor, VideoBackgroundsManager, AudioBackgroundsManager
 
-from shortwizard.editor_quizz.editorQuizz_assets import create_text_clip_list, create_text_clip_list_dynamic
+from shortwizard.editor_utils import editor
+from shortwizard.editor_utils.video import VideoBackgroundsManager
+from shortwizard.editor_utils.text.text_utils import create_text_clip_list, create_text_clip_list_dynamic
+
+from shortwizard.tts import tts
+
+from shortwizard.file_manager import file_manager
 
 
 def make_shorts_COUPLE(video_backgrounds_dir_path, quizzs_path, language, output_path):

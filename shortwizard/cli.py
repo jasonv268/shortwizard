@@ -9,6 +9,7 @@ import typer
 from shortwizard import ERRORS, __app_name__, __version__, config
 from shortwizard.editor_quizz import editorQuizz
 
+
 app = typer.Typer()
 
 
@@ -46,8 +47,7 @@ def edit_quizz_couple(
     lang: str = typer.Option(default=None, help="IA language code."),
 ) -> None:
     typer.echo(
-        f"Editing Quizzs Couple{video_backgrounds_dir_path},{
-            quizzs_path}, {lang}"
+        f"Editing Quizzs Couple{video_backgrounds_dir_path},{quizzs_path}, {lang}"
     )
     editorQuizz.make_shorts_COUPLE(video_backgrounds_dir_path,
                                    quizzs_path, lang, Path.cwd())

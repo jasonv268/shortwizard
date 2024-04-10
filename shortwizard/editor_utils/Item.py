@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from shortwizard.utils import Effect
+from shortwizard.editor_utils import Effect
 
 
 class Item(ABC):

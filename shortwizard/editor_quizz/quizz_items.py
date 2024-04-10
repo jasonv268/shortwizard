@@ -2,8 +2,8 @@ import random
 from pathlib import Path
 
 from shortwizard.config import root
-from shortwizard.utils.Item import Item
-from shortwizard.utils import Effect
+from shortwizard.editor_utils.Item import Item
+from shortwizard.editor_utils import Effect
 
 class Question(Item):
 

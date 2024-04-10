@@ -1,7 +1,7 @@
 import moviepy.editor as mpe
 import random
 
-from shortwizard.utils import editor_assets
+from shortwizard.editor_utils.video import video_utils
 
 
 def diviser_texte(texte, longueur_max):
@@ -97,7 +97,7 @@ def create_text_clip_list_dynamic(text, position, t1, t2, font_size, chars_per_l
         text_clip = text_clip.set_position(
             (position[0], position[1])).set_duration(delta_per_two_lines/2).set_start(t1+index*delta_per_two_lines)
 
-        text_clip = text_clip.resize(lambda t: editor_assets.resize(t,delta_per_two_lines/2))
+        text_clip = text_clip.resize(lambda t: video_utils.resize(t,delta_per_two_lines/2))
 
         #1
         text_clip_list.append(text_clip)
@@ -126,7 +126,7 @@ def create_text_clip_list_dynamic(text, position, t1, t2, font_size, chars_per_l
         text_clip = text_clip.set_position(
             (position[0], position[1]+font_size*2)).set_duration(delta_per_two_lines/2).set_start(t1+index*delta_per_two_lines+delta_per_two_lines/2)
 
-        text_clip = text_clip.resize(lambda t: editor_assets.resize(t, delta_per_two_lines/2))
+        text_clip = text_clip.resize(lambda t: video_utils.resize(t, delta_per_two_lines/2))
         #4
         text_clip_list.append(text_clip)
 
@@ -139,8 +139,9 @@ def create_text_clip_list_dynamic(text, position, t1, t2, font_size, chars_per_l
         text_clip = text_clip.set_position(
             (position[0], position[1])).set_duration(delta_per_two_lines).set_start(t1+delta_per_two_lines*len(list_tuple))
         
-        text_clip = text_clip.resize(lambda t: editor_assets.resize(t, delta_per_two_lines/2))
+        text_clip = text_clip.resize(lambda t: video_utils.resize(t, delta_per_two_lines/2))
 
         text_clip_list.append(text_clip)
 
     return text_clip_list
+

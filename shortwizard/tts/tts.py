@@ -1,6 +1,6 @@
 from gtts import gTTS
 from pathlib import Path
-from shortwizard.utils.Item import Item
+from shortwizard.editor_utils.Item import Item
 from pydub import AudioSegment
 
 

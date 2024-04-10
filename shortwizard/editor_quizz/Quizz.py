@@ -1,5 +1,5 @@
 from shortwizard.editor_quizz.quizz_items import Titre
-from shortwizard.utils.Item import Item
+from shortwizard.editor_utils.Item import Item
 
 
 class Quizz:
