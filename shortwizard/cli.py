@@ -8,6 +8,7 @@ import typer
 
 from shortwizard import ERRORS, __app_name__, __version__, config
 from shortwizard.editor_quizz import editorQuizz
+from shortwizard.editor_astrologie import editorAstrologie
 
 
 app = typer.Typer()
@@ -50,6 +51,19 @@ def edit_quizz_couple(
         f"Editing Quizzs Couple{video_backgrounds_dir_path},{quizzs_path}, {lang}"
     )
     editorQuizz.make_shorts_COUPLE(video_backgrounds_dir_path,
+                                   quizzs_path, lang, Path.cwd())
+    
+
+@app.command()
+def edit_astrologie(
+    video_backgrounds_dir_path: Path,
+    quizzs_path: Path,
+    lang: str = typer.Option(default=None, help="IA language code."),
+) -> None:
+    typer.echo(
+        f"Editing Astrologie{video_backgrounds_dir_path},{quizzs_path}, {lang}"
+    )
+    editorAstrologie.make_shorts_ASTRO(video_backgrounds_dir_path,
                                    quizzs_path, lang, Path.cwd())
 
 

@@ -1,47 +1,25 @@
-from enum import Enum
 import time
 
-from shortwizard.editor_quizz import Quizz, QuizzDynamic5Q, QuizzCouple
+from shortwizard.editor_astrologie.Astrologie import Astrologie
+from shortwizard.ShortManager import ShortManager
 
 from shortwizard.editor_utils import editor
 from shortwizard.editor_utils.video import VideoBackgroundsManager
 from shortwizard.editor_utils.text.text_utils import create_text_clip_list, create_text_clip_list_dynamic
 
-from shortwizard.ShortManager import ShortManager
-
 from shortwizard.tts import tts
-from shortwizard.tts import googletts
 
 from shortwizard.file_manager import file_manager
 
-class QuizzType(Enum):
-    DYNAMIC5Q = 0
-    COUPLE = 1
 
-
-def make_shorts_COUPLE(video_backgrounds_dir_path, quizzs_path, language, output_path):
+def make_shorts_ASTRO(video_backgrounds_dir_path, astros_path, language, output_path):
 
     make_shorts(video_backgrounds_dir_path,
-                quizzs_path, language, output_path, QuizzType.COUPLE)
+                astros_path, language, output_path)
 
 
-def make_shorts_DYNAMIC5Q(video_backgrounds_dir_path, quizzs_path, language, output_path):
-
-    make_shorts(video_backgrounds_dir_path,
-                quizzs_path, language, output_path, QuizzType.DYNAMIC5Q)
-
-
-def make_shorts(video_backgrounds_dir_path, quizzs_path, language, output_path, mode: QuizzType):
-
-    match mode:
-            case QuizzType.DYNAMIC5Q:
-                QuizzClass = QuizzDynamic5Q.QuizzDynamic5Q
-            case QuizzType.COUPLE:
-                QuizzClass = QuizzCouple.QuizzCouple
-            case _:
-                raise ValueError("quizz_type error")
-
-    sm: ShortManager = ShortManager(quizzs_path, QuizzClass)
+def make_shorts(video_backgrounds_dir_path, quizzs_path, language, output_path):
+    sm: ShortManager = ShortManager(quizzs_path, Astrologie)
 
     todays_date = time.strftime("%Y_%m_%d_%Hh%Mm%Ss")
 
@@ -55,10 +33,10 @@ def make_shorts(video_backgrounds_dir_path, quizzs_path, language, output_path, 
 
         quizz = sm.get_next_short()
 
-        make_short(quizz, vbm, language, output_dir, mode)
+        make_short(quizz, vbm, language, output_dir)
 
 
-def make_short(quizz: Quizz.Quizz, vbm: VideoBackgroundsManager.VideoBackgoundsManager, language, output_path, mode: QuizzType):
+def make_short(quizz: Astrologie, vbm: VideoBackgroundsManager.VideoBackgoundsManager, language, output_path):
 
     temp_folder = file_manager.create_temp_folder()
 
