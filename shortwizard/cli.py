@@ -55,6 +55,19 @@ def edit_quizz_couple(
     
 
 @app.command()
+def edit_quizz_list5q(
+    video_backgrounds_dir_path: Path,
+    quizzs_path: Path,
+    lang: str = typer.Option(default=None, help="IA language code."),
+) -> None:
+    typer.echo(
+        f"Editing Quizzs Couple{video_backgrounds_dir_path},{quizzs_path}, {lang}"
+    )
+    editorQuizz.make_shorts_LIST5Q(video_backgrounds_dir_path,
+                                   quizzs_path, lang, Path.cwd())
+    
+
+@app.command()
 def edit_astrologie(
     video_backgrounds_dir_path: Path,
     quizzs_path: Path,

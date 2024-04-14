@@ -1,5 +1,5 @@
 from shortwizard.editor_astrologie.astro_items import Titre, Annonce
-from shortwizard.editor_utils.Item import Item
+from shortwizard.editor_utils.MyTextClip import MyTextClip
 
 
 class Astrologie:
@@ -12,7 +12,7 @@ class Astrologie:
 
         self.quizz_name = json_astro["titre"]
 
-        self.quizz_items: list[Item] = [Titre(json_astro["titre"])]
+        self.quizz_items: list[MyTextClip] = [Titre(json_astro["titre"])]
 
         self.number = number
 

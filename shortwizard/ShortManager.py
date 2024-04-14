@@ -1,10 +1,10 @@
 from enum import Enum
 import json
 
+
 class ShortManager:
 
     def __init__(self, path, Class):
-        
 
         self.group_name = str(path).split("/")[-1].replace(".json", "")
 

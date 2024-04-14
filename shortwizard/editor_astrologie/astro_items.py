@@ -2,10 +2,10 @@ import random
 from pathlib import Path
 
 from shortwizard.config import root
-from shortwizard.editor_utils.Item import Item
+from shortwizard.editor_utils.MyTextClip import MyTextClip
 from shortwizard.editor_utils import Effect
 
-class Titre(Item):
+class Titre(MyTextClip):
     def __init__(self, text_content):
         super().__init__(text_content)
 
@@ -22,7 +22,7 @@ class Titre(Item):
         self.effects = [Effect.VideoEffect(root / Path("shortwizard/assets/video/follow.mp4"), 11, -0.5, ("center", 1000), (138, 255, 2), 1.0)]
 
 
-class Annonce(Item):
+class Annonce(MyTextClip):
     def __init__(self, text_content, emotes):
         super().__init__(text_content)
 

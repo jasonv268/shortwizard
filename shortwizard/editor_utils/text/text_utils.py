@@ -24,6 +24,24 @@ def diviser_texte(texte, longueur_max):
     return parties
 
 
+def create_text_clip_list_hooked(text, position, t1, font_size, chars_per_line):
+
+    list = diviser_texte(text, chars_per_line)
+
+    text_clip_list = []
+
+    for index, t in enumerate(list):
+        text_clip = mpe.TextClip(txt=t, fontsize=font_size, color='red', stroke_color='black',
+                                 stroke_width=5, font='Tiktok-Bold', kerning=-4)
+
+        text_clip = text_clip.set_position(
+            (position[0], position[1]+index*font_size*2)).set_duration(None).set_start(t1-1)
+
+        text_clip_list.append(text_clip)
+
+    return text_clip_list
+
+
 def create_text_clip_list(text, position, t1, t2, font_size, chars_per_line):
 
     list = diviser_texte(text, chars_per_line)

@@ -1,5 +1,7 @@
-from shortwizard.editor_utils.Item import Item
+from shortwizard.editor_utils.MyTextClip import MyTextClip, TtsTextClip
 import moviepy.editor as mpe
+from shortwizard.editor_utils.Sequence import Sequence
+from shortwizard.editor_utils.text import text_utils
 from shortwizard.editor_utils.video import VideoBackgroundsManager
 from shortwizard.editor_utils.video import video_utils
 
@@ -8,6 +10,7 @@ from pathlib import Path
 from shortwizard.editor_utils import Effect
 from shortwizard.config import root
 from shortwizard.editor_utils.audio import AudioBackgroundsManager
+
 
 def create_effects(effects: list[Effect.Effect], start_time, tts_duration):
 
@@ -55,7 +58,8 @@ def create_effects(effects: list[Effect.Effect], start_time, tts_duration):
         elif isinstance(effect, Effect.VideoEffect):
 
             video_effect = mpe.VideoFileClip(effect.get_effect_path())
-            video_effect = video_utils.remove_green_screen(video_effect, effect)
+            video_effect = video_utils.remove_green_screen(
+                video_effect, effect)
 
             if effect.get_start_time() == "TTSEND":
                 video_effect = video_effect.set_start(
@@ -74,7 +78,7 @@ def create_effects(effects: list[Effect.Effect], start_time, tts_duration):
     return audio_clip_list, video_clip_list
 
 
-def create_audio_and_text(item_list: list[Item], text_clip_function):
+def create_audio_and_text(item_list: list[MyTextClip], text_clip_function):
 
     time = 0.5
 
@@ -83,30 +87,39 @@ def create_audio_and_text(item_list: list[Item], text_clip_function):
     video_clip_list = []
 
     for item in item_list:
-        audio_part = mpe.AudioFileClip(item.get_tts_path())
-        audio_part = audio_part.set_start(time)
 
-        sound_effects = []
+        if isinstance(item, TtsTextClip):
 
-        if item.has_effects():
+            audio_part = mpe.AudioFileClip(item.get_tts_path())
+            audio_part = audio_part.set_start(time)
 
-            effects = item.get_effects()
+            sound_effects = []
 
-            audio_effects_clip, video_effects_clip = create_effects(
-                effects, time, audio_part.duration)
+            if item.has_effects():
 
-            sound_effects += audio_effects_clip
+                effects = item.get_effects()
 
-            video_clip_list += video_effects_clip
+                audio_effects_clip, video_effects_clip = create_effects(
+                    effects, time, audio_part.duration)
 
-        
-        audio_clip_list.append(audio_part)
-        audio_clip_list = audio_clip_list + sound_effects
+                sound_effects += audio_effects_clip
 
-        video_clip_list += text_clip_function(
-            item.get_text_content().upper(), item.get_position(), time, time+audio_part.duration, item.get_font_size(), item.get_chars_per_line())
+                video_clip_list += video_effects_clip
 
-        time = time + audio_part.duration + item.get_pause_duration()
+            audio_clip_list.append(audio_part)
+            audio_clip_list = audio_clip_list + sound_effects
+
+            video_clip_list += text_clip_function(
+                item.get_text_content().upper(), item.get_position(), time, time+audio_part.duration, item.get_font_size(), item.get_chars_per_line())
+
+            time = time + audio_part.duration + item.get_pause_duration()
+
+        else:
+
+            text_clip_list = text_utils.create_text_clip_list_hooked(item.get_text_content(
+            ).upper(), item.get_position(), time, item.get_font_size(), item.get_chars_per_line())
+
+            video_clip_list += text_clip_list
 
     audio_clip = mpe.CompositeAudioClip(audio_clip_list)
 
@@ -144,13 +157,37 @@ def write_final_render(bg_clip, text_clip_list, audio_clip, output_dir, file_nam
 
     final_render: mpe.CompositeVideoClip = mpe.CompositeVideoClip(
         [bg_clip]+text_clip_list, bg_color=None)
-    
-    final_render = final_render.set_audio(mpe.CompositeAudioClip([final_render.audio, audio_clip]))
+
+    final_render = final_render.set_audio(
+        mpe.CompositeAudioClip([final_render.audio, audio_clip])).set_duration(bg_clip.duration)
 
     final_render.write_videofile(
-        os.path.normpath(Path(output_dir) / Path(f"{file_name}.mp4")),codec="libx264", threads=4, fps=24)
-    
+        os.path.normpath(Path(output_dir) / Path(f"{file_name}.mp4")), codec="libx264", threads=4, fps=24)
+
     audio_clip.close()
     final_render.close()
     for clip in text_clip_list:
         clip.close()
+
+def write_final_render2(objects: list[Sequence], output_dir, file_name):
+
+    audio_objects = []
+    video_objetcs = []
+
+    for obj in objects:
+        render_obj = obj.render()
+        if isinstance(render_obj, mpe.VideoClip):
+            video_objetcs.append(render_obj)
+        elif isinstance(render_obj, mpe.AudioClip):
+            audio_objects.append(render_obj)
+
+    print(objects, video_objetcs, audio_objects)
+
+    final_render: mpe.CompositeVideoClip = mpe.CompositeVideoClip(
+        video_objetcs, bg_color=None)
+
+    final_render = final_render.set_audio(
+        mpe.CompositeAudioClip(audio_objects))
+
+    final_render.write_videofile(
+        os.path.normpath(Path(output_dir) / Path(f"{file_name}.mp4")), codec="libx264", threads=4, fps=24)
