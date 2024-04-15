@@ -1,4 +1,4 @@
-from shortwizard.editor_utils.MyTextClip import MyTextClip, TtsTextClip
+#from shortwizard.editor_utils.MyTextClip import MyTextClip, TtsTextClip
 from shortwizard.editor_utils.Sequence import Sequence
 
 
@@ -12,9 +12,9 @@ class Quizz:
 
         self.quizz_name = json_quizz["titre"]
 
-        self.quizz_items = []
+        self.json_quizz = json_quizz
 
-        self.sequence = Sequence()
+        self.sequence = Sequence(0)
 
         self.number = number
 
@@ -23,19 +23,10 @@ class Quizz:
 
     def get_number(self):
         return self.number
-
-    def get_next_item(self):
-        return self.quizz_items.pop(0)
-
-    def has_next_item(self):
-        return len(self.quizz_items) > 0
     
-    def get_sequence(self)->Sequence:
+
+    def get_sequence(self):
         return self.sequence
 
-    def get_all_items(self):
-        return self.quizz_items
     
-    def get_tts_items(self):
-        return [item for item in self.quizz_items if isinstance(item, TtsTextClip)]
-    
+   

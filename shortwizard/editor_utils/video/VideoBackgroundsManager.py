@@ -1,7 +1,7 @@
 import os
 import random
 
-class VideoBackgoundsManager:
+class VideoBackgroundsManager:
     def __init__(self, video_backgrounds_dir_path):
         self.videos = [video_backgrounds_dir_path / file for file in os.listdir(video_backgrounds_dir_path)]
         random.shuffle(self.videos)

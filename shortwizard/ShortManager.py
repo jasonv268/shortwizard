@@ -15,7 +15,7 @@ class ShortManager:
                 self.shorts = [Class(short, index)
                                for index, short in enumerate(json_short_list)]
             else:
-                self.shorts = [Class(json_short_list, 0)]
+                self.shorts = [Class(json_short_list, 0,)]
 
     def get_group_name(self):
         return self.group_name

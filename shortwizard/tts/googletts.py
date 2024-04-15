@@ -2,13 +2,11 @@ import os
 from pathlib import Path
 from google.cloud import texttospeech
 
-from shortwizard.editor_utils.MyTextClip import TtsTextClip
-
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'test_service_account.json'
 
 client = texttospeech.TextToSpeechClient()
 
-def generate_voices(item_list: list[TtsTextClip], lang: str, output_dir: str):
+def generate_voices(item_list, lang: str, output_dir: str):
     """Generate voices for the given text list."""
 
     voice = texttospeech.VoiceSelectionParams(

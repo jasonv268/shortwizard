@@ -8,7 +8,6 @@ import typer
 
 from shortwizard import ERRORS, __app_name__, __version__, config
 from shortwizard.editor_quizz import editorQuizz
-from shortwizard.editor_astrologie import editorAstrologie
 
 
 app = typer.Typer()
@@ -76,8 +75,8 @@ def edit_astrologie(
     typer.echo(
         f"Editing Astrologie{video_backgrounds_dir_path},{quizzs_path}, {lang}"
     )
-    editorAstrologie.make_shorts_ASTRO(video_backgrounds_dir_path,
-                                   quizzs_path, lang, Path.cwd())
+    # editorAstrologie.make_shorts_ASTRO(video_backgrounds_dir_path,
+    #                                quizzs_path, lang, Path.cwd())
 
 
 def _version_callback(value: bool) -> None:

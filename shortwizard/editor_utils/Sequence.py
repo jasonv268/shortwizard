@@ -19,10 +19,6 @@ class Sequence:
             else:
                 obj.stop_at(stop_time)
 
-
-    def append_obj(self, obj):
-        self.objects.append(obj)
-
     def render(self, output_path=None):
         audio_objects = []
         video_objects = []
@@ -40,8 +36,6 @@ class Sequence:
                     audio_objects.append(obj)
 
         get_all_objects(self)
-
-        print(video_objects)
 
         match (len(video_objects) > 0, len(audio_objects) > 0):
             case False, False:

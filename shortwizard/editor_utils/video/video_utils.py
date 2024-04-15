@@ -1,5 +1,10 @@
-from moviepy.editor import concatenate_videoclips, VideoFileClip, vfx
-from shortwizard.editor_utils import Effect
+import math
+from PIL import Image
+import numpy
+from moviepy.editor import concatenate_videoclips, VideoFileClip, vfx, ImageSequenceClip
+from skimage.filters import gaussian
+
+
 
 def crop_bg(bg_clip):
     h_original = bg_clip.h
@@ -10,6 +15,66 @@ def crop_bg(bg_clip):
         size=(1080, 1920), color=(0, 0, 0))
 
     return bg_clip
+
+
+def resize(clip, w, h):
+    
+    clip.w = clip.w * w
+    clip.h = clip.h * h
+
+    return clip
+
+
+def blur(clip, duration):
+    def dynamic_blur(image, t):
+        """ Returns a dynamically blurred version of the image """
+        max_blur_radius = 50  # Rayon maximal de flou
+        blur_radius = max_blur_radius * (1 - t / duration)  # Flou décroissant avec le temps
+        # Assurez-vous que le flou tombe bien à 0 à la fin de la période de flou
+        blur_radius = max(blur_radius, 0)
+        # Interpolation gaussienne pour une transition plus douce
+        return gaussian(image.astype(float), sigma=blur_radius)
+
+    blur_clip = clip.subclip(0, duration)
+    
+    # Appliquer le flou dynamique à chaque trame de la période de flou
+    blurred_frames = [dynamic_blur(frame, t) for t, frame in blur_clip.iter_frames(with_times=True)]
+    blurred_clip = ImageSequenceClip(blurred_frames, fps=clip.fps)
+    
+    # Concaténer la vidéo floue avec la vidéo originale après la période de flou
+    return concatenate_videoclips([blurred_clip, clip.set_start(duration)])
+
+
+
+def zoom_in(clip, zoom_ratio=0.04):
+    def effect(get_frame, t):
+        img = Image.fromarray(get_frame(t))
+        base_size = img.size
+
+        new_size = [
+            math.ceil(img.size[0] * (1 + (zoom_ratio * t))),
+            math.ceil(img.size[1] * (1 + (zoom_ratio * t)))
+        ]
+
+        # The new dimensions must be even.
+        new_size[0] = new_size[0] + (new_size[0] % 2)
+        new_size[1] = new_size[1] + (new_size[1] % 2)
+
+        img = img.resize(new_size, Image.LANCZOS)
+
+        x = math.ceil((new_size[0] - base_size[0]) / 2)
+        y = math.ceil((new_size[1] - base_size[1]) / 2)
+
+        img = img.crop([
+            x, y, new_size[0] - x, new_size[1] - y
+        ]).resize(base_size, Image.LANCZOS)
+
+        result = numpy.array(img)
+        img.close()
+
+        return result
+
+    return clip.fl(effect)
 
 
 def fade_in_out_bg(bg_clip):
@@ -31,7 +96,7 @@ def fade_in_out_bg(bg_clip):
 
     return bg_clip
 
-def resize(t, duration):
+def zoom(t, duration):
     # Starting scale factor
     start_scale = 1
     # End scale factor (the size to which the text should grow)
@@ -71,12 +136,12 @@ def create_anim(path, start_time, end_time, position):
     return anim
 
 
-def remove_green_screen(clip, effect: Effect.VideoEffect):
+def remove_green_screen(clip, mask_color=(0, 255, 0)):
 
     anim = clip.fx(
-        vfx.mask_color, color=effect.get_mask_color(), thr=100, s=100)
+        vfx.mask_color, color=mask_color, thr=150, s=100)
     anim.set_opacity(0.8)
-    anim = anim.resize((640, 360))
-    anim = anim.set_position(effect.get_position())
+    # anim = anim.resize((640, 360))
+    # anim = anim.set_position(effect.get_position())
 
     return anim

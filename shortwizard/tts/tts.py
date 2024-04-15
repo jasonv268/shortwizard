@@ -1,12 +1,11 @@
 from gtts import gTTS
 from pathlib import Path
-from shortwizard.editor_utils.MyTextClip import TtsTextClip
 from pydub import AudioSegment
 
 
 
 
-def generate_voices(item_list: list[TtsTextClip], lang: str, output_dir: str):
+def generate_voices(item_list, lang: str, output_dir: str):
     """Generate voices for the given text list."""
     for index, item in enumerate(item_list):
         tts = gTTS(text=item.get_text_content(), lang=lang, slow=False)

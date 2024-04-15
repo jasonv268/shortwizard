@@ -7,8 +7,6 @@ import os
 from ibm_watson import TextToSpeechV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
-from shortwizard.editor_utils.MyTextClip import TtsTextClip
-
 
 
 #API
@@ -22,7 +20,7 @@ authenticator = IAMAuthenticator(apikey)
 tts = TextToSpeechV1(authenticator=authenticator)
 tts.set_service_url(url)
 
-def generate_voices(item_list: list[TtsTextClip], lang: str, output_dir: str):
+def generate_voices(item_list, lang: str, output_dir: str):
     """Generate voices for the given text list."""
     for index, item in enumerate(item_list):
         tts_path = Path(output_dir) / f"{index}.mp3"
