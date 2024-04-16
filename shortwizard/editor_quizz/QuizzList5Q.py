@@ -50,27 +50,27 @@ class QuizzList5Q(Quizz):
         y_anchor_position = 850
 
         anchor_infos = Sequence(t)
-        anchor_infos.objects += [Texte("FACILE", (50, y_anchor_position), texte_petit_white_bg_red.set_background_color(colors.GREEN, copy=True)).render(),
-                                 Texte("1)", (50, y_anchor_position+100),
+        anchor_infos.objects += [Texte("FACILE", (100, y_anchor_position), texte_petit_white_bg_red.set_background_color(colors.GREEN, copy=True)).render(),
+                                 Texte("1)", (100, y_anchor_position+100),
                                        texte_petit_white_bg_red.set_background_color(None, copy=True)).render(),
-                                 Texte("2)", (50, y_anchor_position+200),
+                                 Texte("2)", (100, y_anchor_position+200),
                                        texte_petit_white_bg_red.set_background_color(None, copy=True)).render(),
-                                 Texte("MOYEN", (50, y_anchor_position+300), texte_petit_white_bg_red.set_background_color(
+                                 Texte("MOYEN", (100, y_anchor_position+300), texte_petit_white_bg_red.set_background_color(
                                      colors.ORANGE, copy=True)).render(),
-                                 Texte("3)", (50, y_anchor_position+400),
+                                 Texte("3)", (100, y_anchor_position+400),
                                        texte_petit_white_bg_red.set_background_color(None, copy=True)).render(),
-                                 Texte("4)", (50, y_anchor_position+500),
+                                 Texte("4)", (100, y_anchor_position+500),
                                        texte_petit_white_bg_red.set_background_color(None, copy=True)).render(),
-                                 Texte("DIFFICILE", (50, y_anchor_position+600),
+                                 Texte("DIFFICILE", (100, y_anchor_position+600),
                                        texte_petit_white_bg_red.set_background_color(colors.RED, copy=True)).render(),
-                                 Texte("5)", (50, y_anchor_position+700),
+                                 Texte("5)", (100, y_anchor_position+700),
                                        texte_petit_white_bg_red.set_background_color(None, copy=True)).render()]
 
         anchor_infos.start_at(t)
 
         sequence_questions.objects += [anchor_infos]
 
-        ref_position_reponse = (120, 950)
+        ref_position_reponse = (170, 950)
 
         for index, item in enumerate(self.json_quizz["questions"]):
             if index == 2:
@@ -114,7 +114,14 @@ class QuizzList5Q(Quizz):
 
         sequence_questions.stop_at(t)
 
-        t += 1.5
+        an1 = Annonce("Donne moi ton score sur 5 en commentaire !", "sun_glasses").start_at(t)
+        t += an1.duration
+        an1.stop_at(t)
+        an2 = Annonce("Pense à t'abonner !", "sourire").start_at(t)
+        t += an2.duration
+        an2.stop_at(t)
+
+        t += 1
 
         self.sequence.objects = [Background(
             0, t, self.video_background_path)] + self.sequence.objects

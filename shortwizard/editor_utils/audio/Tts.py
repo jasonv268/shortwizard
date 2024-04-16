@@ -23,7 +23,7 @@ class Tts:
             case Mode.GOOGLE_LOW:
                 tts_func = tts.generate_voice
             case Mode.GOOGLE_HIGH:
-                tts_func = tts.generate_voice
+                tts_func = googletts.generate_voice
             case Mode.WATSON:
                 tts_func = tts.generate_voice
             case _:

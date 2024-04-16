@@ -108,7 +108,7 @@ def create_text_clip_list_dynamic(texte: 'texte.Texte', tts_duration) -> Sequenc
     return sequence
 
 
-def create_text(texte: texte.Texte) -> Sequence:
+def create_text(texte: 'texte.Texte') -> Sequence:
     sequence = Sequence(0)
 
     if texte.basique.font_size <= 70:

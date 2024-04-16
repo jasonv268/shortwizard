@@ -41,6 +41,8 @@ class Chrono(Sequence):
 
         sound = mpe.AudioFileClip(root_assets / "audio_effects" /
                                   "clock.mp3").set_start(0)
+        
+        sound = sound.volumex(0.1)
 
         self.objects = [chrono, sound]
 
@@ -49,7 +51,7 @@ class Annonce(Sequence):
     def __init__(self, text_content, emote_name):
         super().__init__(0)
 
-        tts = Tts.Tts("fr", Tts.Mode.GOOGLE_LOW)
+        tts = Tts.Tts("fr", Tts.Mode.GOOGLE_HIGH)
 
         annonce = Texte(text_content.upper(), ("center", 500),
                         texte_grand_no_bg, tts, animation=True).render()
@@ -69,7 +71,7 @@ class Question(Sequence):
     def __init__(self, text_content):
         super().__init__(0)
 
-        tts = Tts.Tts("fr", Tts.Mode.GOOGLE_LOW)
+        tts = Tts.Tts("fr", Tts.Mode.GOOGLE_HIGH)
 
         question = Texte(text_content.upper(), ("center", 500),
                          texte_grand_no_bg, tts, animation=True).render().start_at(0)
@@ -96,7 +98,7 @@ class Reponse(Sequence):
     def __init__(self, text_content, position):
         super().__init__(0)
 
-        tts = Tts.Tts("fr", Tts.Mode.GOOGLE_LOW)
+        tts = Tts.Tts("fr", Tts.Mode.GOOGLE_HIGH)
 
         reponse = Texte(text_content.upper(), ("center", 500),
                         texte_grand_no_bg, tts, animation=True).render()

@@ -1,4 +1,3 @@
-#from shortwizard.editor_utils.MyTextClip import MyTextClip, TtsTextClip
 from shortwizard.editor_utils.Sequence import Sequence
 
 
