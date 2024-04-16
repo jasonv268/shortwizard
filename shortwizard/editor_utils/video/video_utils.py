@@ -108,40 +108,5 @@ def zoom(t, duration):
     return scale_factor
 
 
-def edit_anim(path, start_time, end_time):
-    follow_clip = VideoFileClip(path)
-
-    follow_anim = follow_clip.subclip(start_time, end_time)
-    follow_anim = follow_anim.resize((640, 360))
-    follow_anim = follow_anim.set_position(("center", 200))
-    follow_anim = follow_anim.fx(
-        vfx.mask_color, color=(95, 206, 29), thr=100, s=100)
-    follow_anim = follow_anim.fx(vfx.speedx, 1.5)
-    follow_anim.set_opacity(0.8)
-
-    return follow_anim
 
 
-def create_anim(path, start_time, end_time, position):
-    anim = VideoFileClip(path)
-
-    anim = anim.subclip(start_time, end_time)
-    # anim = anim.resize((640, 360))
-    anim = anim.set_position(position)
-    anim = anim.fx(
-        vfx.mask_color, color=(1, 255, 11), thr=100, s=100)
-    anim = anim.fx(vfx.speedx, 1.5)
-    anim.set_opacity(0.8)
-
-    return anim
-
-
-def remove_green_screen(clip, mask_color=(0, 255, 0)):
-
-    anim = clip.fx(
-        vfx.mask_color, color=mask_color, thr=150, s=100)
-    anim.set_opacity(0.8)
-    # anim = anim.resize((640, 360))
-    # anim = anim.set_position(effect.get_position())
-
-    return anim

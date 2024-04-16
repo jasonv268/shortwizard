@@ -4,8 +4,8 @@ import os
 
 class Sequence:
 
-    def __init__(self, start_time, duration=None) -> None:
-        self.start_time = 0
+    def __init__(self, start_time, duration=0) -> None:
+        self.start_time = start_time
         self.duration = duration
         self.objects = []
 
@@ -15,9 +15,19 @@ class Sequence:
             if isinstance(obj, mpe.VideoClip) or isinstance(obj, mpe.AudioClip):
                 if obj.duration is None or obj.start+obj.duration > stop_time:
                     self.objects[index] = obj.set_duration(stop_time-obj.start)
-                    print(obj.start,obj.duration,">",stop_time-obj.start)
             else:
                 obj.stop_at(stop_time)
+
+        return self
+
+    def start_at(self, start_time):
+        for index, obj in enumerate(self.objects):
+            if isinstance(obj, mpe.VideoClip) or isinstance(obj, mpe.AudioClip):
+                self.objects[index] = obj.set_start(obj.start+start_time)
+            else:
+                obj.start_at(start_time)
+
+        return self
 
     def render(self, output_path=None):
         audio_objects = []
@@ -27,6 +37,7 @@ class Sequence:
 
         def get_all_objects(obj):
             if isinstance(obj, Sequence):
+                #obj.start_at(obj.start_time)
                 for o in obj.objects:
                     get_all_objects(o)
             else:
@@ -52,6 +63,11 @@ class Sequence:
             final_render = final_render.set_duration(self.duration)
 
         if output_path and final_render:
-            final_render.write_videofile(os.path.normpath(output_path), codec="libx264", threads=4, fps=24)
-        
+            final_render.write_videofile(os.path.normpath(
+                output_path), codec="libx264", threads=4, fps=24)
+            
+            final_render.close()
+
         return final_render
+    
+
