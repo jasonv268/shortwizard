@@ -6,7 +6,7 @@ from shortwizard.editor_utils.video import video_maker
 
 class Video:
 
-    def __init__(self, file_path, position, basique: Basique.Basique = Basique.default, animation=None, speed=None) -> None:
+    def __init__(self, file_path, position, basique: Basique.Basique = Basique.default, animation=None, speed=1.0) -> None:
         self.file_path = file_path
         self.position = position
         self.basique = basique

@@ -2,12 +2,11 @@ from enum import Enum
 from pathlib import Path
 import time
 
-from shortwizard.editor_quizz import Quizz, QuizzList5Q
+from shortwizard.editor_quizz import QuizzList5Q
 
 from shortwizard.ShortManager import ShortManager
 
 from shortwizard.tts import tts
-from shortwizard.tts import googletts
 
 from shortwizard.file_manager import file_manager
 
@@ -18,31 +17,32 @@ class QuizzType(Enum):
     LIST5Q = 2
 
 
-def make_shorts_COUPLE(video_backgrounds_dir_path, quizzs_path, language, output_path):
+def make_shorts_LIST5Q(video_backgrounds_dir_path, quizzs_path, ia, language, output_path):
 
     make_shorts(video_backgrounds_dir_path,
-                quizzs_path, language, output_path, QuizzType.COUPLE)
+                quizzs_path, ia ,language, output_path,  QuizzType.LIST5Q)
 
 
-def make_shorts_DYNAMIC5Q(video_backgrounds_dir_path, quizzs_path, language, output_path):
+def make_shorts(video_backgrounds_dir_path, quizzs_path, ia, language, output_path, mode: QuizzType):
 
-    make_shorts(video_backgrounds_dir_path,
-                quizzs_path, language, output_path, QuizzType.DYNAMIC5Q)
+    tts_mode = None
+    ia_tts = None
 
+    match ia:
+        case "google-low":
+            tts_mode = tts.Mode.GOOGLE_LOW
+        case "google-high":
+            tts_mode = tts.Mode.GOOGLE_HIGH
+        case "watson":
+            tts_mode = tts.Mode.WATSON
 
-def make_shorts_LIST5Q(video_backgrounds_dir_path, quizzs_path, language, output_path):
-
-    make_shorts(video_backgrounds_dir_path,
-                quizzs_path, language, output_path, QuizzType.LIST5Q)
-
-
-def make_shorts(video_backgrounds_dir_path, quizzs_path, language, output_path, mode: QuizzType):
+    match language:
+        case "fr-fr":
+            ia_tts = tts.Tts("fr", tts_mode)
+        case "en-en":
+            ia_tts = tts.Tts("en", tts_mode)
 
     match mode:
-        # case QuizzType.DYNAMIC5Q:
-        #     QuizzClass = QuizzDynamic5Q.QuizzDynamic5Q
-        # case QuizzType.COUPLE:
-        #     QuizzClass = QuizzCouple.QuizzCouple
         case QuizzType.LIST5Q:
             QuizzClass = QuizzList5Q.QuizzList5Q
         case _:
@@ -53,7 +53,7 @@ def make_shorts(video_backgrounds_dir_path, quizzs_path, language, output_path, 
     todays_date = time.strftime("%Y_%m_%d_%Hh%Mm%Ss")
 
     output_dir = file_manager.create_output_dir(
-        output_path / f"JSON_{sm.get_group_name()}_IA_{language}_DATE_{todays_date}")
+        output_path / f"DATE_{todays_date}_JSON_{sm.get_group_name()}_IA_{ia}_LANG_{language}")
 
     while sm.has_next_short():
 
@@ -65,6 +65,10 @@ def make_shorts(video_backgrounds_dir_path, quizzs_path, language, output_path, 
 
         quizz.set_background_path(video_backgrounds_dir_path)
 
+        quizz.set_ia_tts(ia_tts)
+
         quizz.create_sequence()
 
         quizz.get_sequence().render(output_dir / Path(file_name+".mp4"))
+
+        quizz.get_sequence().close()

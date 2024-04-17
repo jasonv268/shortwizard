@@ -6,7 +6,6 @@ import moviepy.editor as mpe
 
 from shortwizard.editor_utils.img.image import Image
 from shortwizard.editor_utils.Sequence import Sequence
-from shortwizard.editor_utils.audio import Tts
 
 from shortwizard.config import root_assets
 from shortwizard.editor_utils.img.Basique import Basique
@@ -16,6 +15,8 @@ from shortwizard.editor_utils.text.Basique import texte_grand_no_bg, texte_petit
 from shortwizard.editor_utils.video.VideoBackgroundsManager import VideoBackgroundsManager
 from shortwizard.editor_utils.video import video_maker, video_utils
 from shortwizard.editor_utils.video.Video import Video
+
+from shortwizard.editor_utils.audio.audio import Audio, basique
 
 from shortwizard.editor_utils.img import animation, image_utils
 
@@ -37,75 +38,68 @@ class Chrono(Sequence):
         super().__init__(0)
 
         chrono = Image(root_assets / "image" / "chrono.png",
-                       ("center", 300), Basique(zoom=2), animation.battement).render()
-
-        sound = mpe.AudioFileClip(root_assets / "audio_effects" /
-                                  "clock.mp3").set_start(0)
+                       ("center", 400), Basique(zoom=2), animation.battement).render()
         
-        sound = sound.volumex(0.1)
+        volume_reduction = basique.Basique(volume=0.1)
+        
+        sound = Audio(root_assets / "audio_effects" / "clock.mp3", basique=volume_reduction).render()
 
         self.objects = [chrono, sound]
 
 
 class Annonce(Sequence):
-    def __init__(self, text_content, emote_name):
+    def __init__(self, text_content, emote_name ,tts):
         super().__init__(0)
 
-        tts = Tts.Tts("fr", Tts.Mode.GOOGLE_HIGH)
-
-        annonce = Texte(text_content.upper(), ("center", 500),
+        annonce = Texte(text_content, ("center", 500),
                         texte_grand_no_bg, tts, animation=True).render()
 
-        self.duration = annonce.duration
+        self.duration = annonce.duration-0.3
 
         emote_resize = Basique(mask_color=(4, 253, 45), zoom=0.4)
 
         emote = Video(root_assets / "video" / f"{emote_name}.mp4",
                        ("center", 220), basique=emote_resize, animation=animation.slide).render()
-        emote.start_at(0).stop_at(annonce.duration)
+        emote.start_at(0).stop_at(annonce.duration-0.3)
 
         self.objects = [emote, annonce]
 
 
 class Question(Sequence):
-    def __init__(self, text_content):
+    def __init__(self, text_content, tts):
         super().__init__(0)
 
-        tts = Tts.Tts("fr", Tts.Mode.GOOGLE_HIGH)
-
-        question = Texte(text_content.upper(), ("center", 500),
+        question = Texte(text_content, ("center", 500),
                          texte_grand_no_bg, tts, animation=True).render().start_at(0)
 
         swoosh = mpe.AudioFileClip(root_assets /
                                    "audio_effects" / "swoosh.mp3").set_start(-0.2)
 
-        chrono = Chrono().start_at(question.duration).stop_at(question.duration+3)
+        chrono = Chrono().start_at(question.duration).stop_at(question.duration-0.3+3)
 
         emote_resize = Basique(mask_color=(4, 253, 45), zoom=0.4)
 
         emotes = ["ne_sait_pas_homme", "ne_sait_pas_femme", "bizzare"]
 
         emote = Video(root_assets / "video" / f"{random.choice(emotes)}.mp4",
-                       ("center", 250), basique=emote_resize, animation=animation.slide).render()
-        emote.start_at(0).stop_at(question.duration)
+                       ("center", 270), basique=emote_resize, animation=animation.slide).render()
+        emote.start_at(0).stop_at(question.duration-0.3)
 
-        self.duration = question.duration+3
+        self.duration = question.duration-0.3+3
 
         self.objects = [swoosh, emote, question, chrono]
 
 
 class Reponse(Sequence):
-    def __init__(self, text_content, position):
+    def __init__(self, text_content, position, tts):
         super().__init__(0)
 
-        tts = Tts.Tts("fr", Tts.Mode.GOOGLE_HIGH)
-
-        reponse = Texte(text_content.upper(), ("center", 500),
+        reponse = Texte(text_content, ("center", 500),
                         texte_grand_no_bg, tts, animation=True).render()
 
         reponse2 = Texte(text_content, position, texte_petit_white_bg_red.set_background_color(None, copy=True)).render(
         ).start_at(reponse.duration)
 
-        self.duration = reponse.duration+1
+        self.duration = reponse.duration-0.3+1
 
         self.objects = [reponse, reponse2]

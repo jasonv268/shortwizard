@@ -1,4 +1,4 @@
-from moviepy.editor import VideoFileClip, concatenate_videoclips
+from moviepy.editor import VideoFileClip, concatenate_videoclips, vfx
 
 from shortwizard.editor_utils.Sequence import Sequence
 from shortwizard.editor_utils.video import VideoBackgroundsManager
@@ -22,6 +22,9 @@ def create_video(video: 'Video.Video')->Sequence:
     if (video.basique.zoom != 1.0):
         video_clip = video_clip.resize(video.basique.zoom)
 
+    if (video.speed!=1.0):
+        video_clip = video_clip.fx(vfx.speedx, video.speed)
+
     if video.position[0] =="center":
         video.position = (540 - video_clip.size[0]//2, video.position[1])
 
@@ -36,9 +39,6 @@ def create_video(video: 'Video.Video')->Sequence:
             position_fun = lambda t: video.animation.position_func(video.position[0], video.position[1], t)
 
             video_clip = video_clip.set_position(position_fun)
-
-    
-     
 
 
     sequence.objects = [video_clip]

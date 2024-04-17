@@ -18,6 +18,17 @@ authenticator = IAMAuthenticator(apikey)
 tts = TextToSpeechV1(authenticator=authenticator)
 tts.set_service_url(url)
 
+
+def generate_voice(text, output_path):
+    """Generate voice for the given text."""
+    with open(output_path, 'wb') as audio_file:
+        audio_file.write(
+            tts.synthesize(
+                text,
+                voice='fr-FR_NicolasV3Voice',
+                accept='audio/mp3'
+            ).get_result().content)
+
 def generate_voices(item_list, lang: str, output_dir: str):
     """Generate voices for the given text list."""
     for index, item in enumerate(item_list):
@@ -31,3 +42,5 @@ def generate_voices(item_list, lang: str, output_dir: str):
                     voice='fr-FR_NicolasV3Voice',
                     accept='audio/mp3'
                 ).get_result().content)
+            
+

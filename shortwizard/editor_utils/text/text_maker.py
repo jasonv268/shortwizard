@@ -2,21 +2,18 @@ import random
 
 from moviepy.editor import TextClip
 
-from shortwizard.config import root_assets
-
 from shortwizard.editor_utils.Sequence import Sequence
 from shortwizard.editor_utils.text import text_utils, texte
 from shortwizard.editor_utils.video import video_utils
+
+from shortwizard.editor_utils import colors as colors_manager
 
 
 def create_text_clip_list_dynamic(texte: 'texte.Texte', tts_duration) -> Sequence:
 
     sequence = Sequence(0)
 
-    if texte.basique.font_size <= 70:
-        chars_per_line = 20
-    else:
-        chars_per_line = 15
+    chars_per_line = text_utils.get_chars_per_line(texte.basique.font_size)
 
     list = text_utils.diviser_texte(texte.text_content, chars_per_line)
 
@@ -24,10 +21,7 @@ def create_text_clip_list_dynamic(texte: 'texte.Texte', tts_duration) -> Sequenc
 
     text_clip_list = []
 
-    # Vert Bleu Jaune Orange Rouge
-
-    colors = ["rgba(55,226,101,255)", "rgba(68,143,234,255)",
-              "rgba(251,221,22,255)", "rgba(244,171,40,255)", "rgba(255,22,0,255)"]
+    colors = colors_manager.get_all()
 
     line_number = len(list)
 
@@ -111,14 +105,13 @@ def create_text_clip_list_dynamic(texte: 'texte.Texte', tts_duration) -> Sequenc
 def create_text(texte: 'texte.Texte') -> Sequence:
     sequence = Sequence(0)
 
-    if texte.basique.font_size <= 70:
-        chars_per_line = 25
-    else:
-        chars_per_line = 20
+    chars_per_line = text_utils.get_chars_per_line(texte.basique.font_size)
 
     list = text_utils.diviser_texte(texte.text_content, chars_per_line)
 
     start_position = texte.position
+
+    text_clip_list = []
 
     for index, t in enumerate(list):
 
@@ -140,6 +133,9 @@ def create_text(texte: 'texte.Texte') -> Sequence:
 
             sequence.objects.append(backgroud)
 
+        text_clip_list.append(text_clip)
+
+    for text_clip in text_clip_list:
         sequence.objects.append(text_clip)
 
     return sequence

@@ -23,6 +23,11 @@ def init_app() -> int:
     config_code = _init_config_file()
     if config_code != SUCCESS:
         return config_code
+    
+
+    config_emotes = _init_emotes_shortcuts()
+    if config_emotes != SUCCESS:
+        return config_emotes
     return SUCCESS
 
 def _init_config_file() -> int:
@@ -35,3 +40,25 @@ def _init_config_file() -> int:
     except OSError:
         return FILE_ERROR
     return SUCCESS
+
+
+def _init_emotes_shortcuts() -> int:
+    try:
+        emotes_dir = root_assets / "video" / "emotes" / "pack1"
+        # Utiliser une clé de tri insensible à la casse pour trier les noms de fichiers
+
+        emotes_list = [(int(file.name.split("_")[0]),file.name.split("_")[1]) for file in emotes_dir.iterdir() if file.is_file()]
+        emotes_list.sort(key=lambda x: x[0])
+
+        python_file ="from moviepy.editor import VideoFileClip\nfrom shortwizard.config import root_assets\n\n"
+
+        for (id, name) in emotes_list:
+            python_file += f"_{id}_{name.split(".")[0].replace(" ","_").replace("-","_")} = VideoFileClip(root_assets /'video' / 'emotes' / 'pack1' / '{id}_{name}', has_mask=True)\n"
+
+        with open(root / "shortwizard" / "editor_utils" / "emotes.py", "w") as file:
+            file.write(python_file)
+
+    except OSError:
+        return FILE_ERROR
+    return SUCCESS
+

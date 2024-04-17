@@ -1,35 +1,40 @@
-from gtts import gTTS
+from enum import Enum
 from pathlib import Path
-from pydub import AudioSegment
 
+from moviepy.editor import AudioFileClip
 
+from shortwizard.tts import googlettslow, googletts, watsontts
+from shortwizard.file_manager import file_manager
 
+class Mode(Enum):
+    GOOGLE_LOW = 0
+    GOOGLE_HIGH = 1
+    WATSON =3
 
-def generate_voices(item_list, lang: str, output_dir: str):
-    """Generate voices for the given text list."""
-    for index, item in enumerate(item_list):
-        tts = gTTS(text=item.get_text_content(), lang=lang, slow=False)
-        tts_path = Path(output_dir) / f"{index}.mp3"
-        item.set_tts_path(tts_path)
-        tts.save(tts_path)
+class Tts:
+    def __init__(self, language, mode) -> None:
+        self.language = language
+        self.mode = mode
 
-        # Charger le fichier audio
-        audio = AudioSegment.from_mp3(tts_path)
+    def create_tts(self, text_content):
+        tts_func = None
 
-        # Accélérer le son par un facteur de 1.1
-        audio_accelere = audio.speedup(playback_speed=1.3)
+        match self.mode:
+            case Mode.GOOGLE_LOW:
+                tts_func = googlettslow.generate_voice
+            case Mode.GOOGLE_HIGH:
+                tts_func = googletts.generate_voice
+            case Mode.WATSON:
+                tts_func = watsontts.generate_voice
+            case _:
+                raise ValueError("mode error")
+            
+        temp_path = file_manager.create_temp_folder() / Path("temp.mp3")
 
-        # Écraser le fichier audio original avec le fichier audio accéléré
-        audio_accelere.export(tts_path, format="mp3")
+        tts_func(text_content, temp_path)
 
+        audio_file_clip = AudioFileClip(temp_path)
 
-def generate_voice(text, output_path):
-    tts = gTTS(text=text, lang="fr", slow=False)
-    tts.save(output_path)
-    audio = AudioSegment.from_mp3(output_path)
+        file_manager.delete_folder(temp_path.parent)
 
-    # Accélérer le son par un facteur de 1.1
-    audio_accelere = audio.speedup(playback_speed=1.3)
-
-    # Écraser le fichier audio original avec le fichier audio accéléré
-    audio_accelere.export(output_path, format="mp3")
+        return audio_file_clip

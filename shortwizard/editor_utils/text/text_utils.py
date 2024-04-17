@@ -49,3 +49,14 @@ def diviser_texte(texte, longueur_max):
         parties.append(partie_actuelle)
 
     return parties
+
+
+def get_chars_per_line(font_size):
+    if 0 < font_size <= 70:
+        return 19
+    elif 70 < font_size <= 80:
+        return 17
+    elif 80 < font_size <= 90:
+        return 15
+    else:
+        return 13

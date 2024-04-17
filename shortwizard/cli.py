@@ -26,44 +26,20 @@ def init() -> None:
     else:
         typer.secho(f"Init Ok", fg=typer.colors.GREEN)
 
-
-@app.command()
-def edit_quizz_dynamic5Q(
-    video_backgrounds_dir_path: Path,
-    quizzs_path: Path,
-    lang: str = typer.Option(default=None, help="IA language code."),
-) -> None:
-    typer.echo(
-        f"Editing Quizzs {video_backgrounds_dir_path},{quizzs_path}, {lang}"
-    )
-    editorQuizz.make_shorts_DYNAMIC5Q(video_backgrounds_dir_path,
-                                      quizzs_path, lang, Path.cwd())
-
-
-@app.command()
-def edit_quizz_couple(
-    video_backgrounds_dir_path: Path,
-    quizzs_path: Path,
-    lang: str = typer.Option(default=None, help="IA language code."),
-) -> None:
-    typer.echo(
-        f"Editing Quizzs Couple{video_backgrounds_dir_path},{quizzs_path}, {lang}"
-    )
-    editorQuizz.make_shorts_COUPLE(video_backgrounds_dir_path,
-                                   quizzs_path, lang, Path.cwd())
-    
+   
 
 @app.command()
 def edit_quizz_list5q(
     video_backgrounds_dir_path: Path,
     quizzs_path: Path,
-    lang: str = typer.Option(default=None, help="IA language code."),
+    lang: str = typer.Option(default="fr-fr", help="IA language code."),
+    ia: str = typer.Option(default="google-low", help="IA name."),
 ) -> None:
     typer.echo(
-        f"Editing Quizzs Couple{video_backgrounds_dir_path},{quizzs_path}, {lang}"
+        f"Editing Quizzs Couple{video_backgrounds_dir_path},{quizzs_path}, {ia},{lang}"
     )
     editorQuizz.make_shorts_LIST5Q(video_backgrounds_dir_path,
-                                   quizzs_path, lang, Path.cwd())
+                                   quizzs_path, ia ,lang, Path.cwd())
     
 
 @app.command()

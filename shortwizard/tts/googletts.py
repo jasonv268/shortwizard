@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 from google.cloud import texttospeech
 
+from pydub import AudioSegment
+
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'test_service_account.json'
 
 client = texttospeech.TextToSpeechClient()
@@ -32,6 +34,14 @@ def generate_voice(text_content, output_path):
         audio_file.write(
             response.audio_content
         )
+
+    audio = AudioSegment.from_mp3(output_path)
+
+    # Accélérer le son par un facteur de 1.1
+    audio_accelere = audio.speedup(playback_speed=1.1)
+
+    # Écraser le fichier audio original avec le fichier audio accéléré
+    audio_accelere.export(output_path, format="mp3")
 
 def generate_voices(item_list, lang: str, output_dir: str):
     """Generate voices for the given text list."""

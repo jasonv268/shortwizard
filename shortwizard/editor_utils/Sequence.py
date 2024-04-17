@@ -37,7 +37,6 @@ class Sequence:
 
         def get_all_objects(obj):
             if isinstance(obj, Sequence):
-                #obj.start_at(obj.start_time)
                 for o in obj.objects:
                     get_all_objects(o)
             else:
@@ -55,9 +54,10 @@ class Sequence:
                 final_render = mpe.CompositeAudioClip(audio_objects)
             case True, False:
                 final_render = mpe.CompositeVideoClip(video_objects)
+                final_render = final_render.set_audio(final_render.audio)
             case True, True:
-                final_render = mpe.CompositeVideoClip(video_objects).set_audio(
-                    mpe.CompositeAudioClip(audio_objects))
+                final_render = mpe.CompositeVideoClip(video_objects)
+                final_render = final_render.set_audio(mpe.CompositeAudioClip([final_render.audio]+audio_objects))
 
         if final_render:
             final_render = final_render.set_duration(self.duration)
@@ -70,4 +70,11 @@ class Sequence:
 
         return final_render
     
+
+    def close(self):
+        for obj in self.objects:
+            if isinstance(obj, Sequence):
+                obj.close()
+            else:
+                obj.close()
 
