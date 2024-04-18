@@ -5,7 +5,7 @@ from shortwizard.editor_utils.text import text_maker
 
 
 
-class Texte:
+class Texte(Sequence):
     def __init__(self, text_content, position=("center", "center"), basique: Basique.Basique = Basique.default, tts: tts.Tts | None = None, animation=None) -> None:
 
         self.text_content = text_content
@@ -13,8 +13,6 @@ class Texte:
         self.basique = basique
         self.tts = tts
         self.animation = animation
-
-    def render(self)->Sequence:            
 
         if self.tts:
             sequence = Sequence(0)
@@ -32,9 +30,12 @@ class Texte:
 
             sequence.duration = audio.duration
 
-            return sequence
-
         else:
             if self.basique.upper:
                 self.text_content = self.text_content.upper()
-            return text_maker.create_text(self)
+            sequence =  text_maker.create_text(self)
+
+        super().__init__(sequence.start_time, sequence.duration, sequence.objects)
+
+
+        

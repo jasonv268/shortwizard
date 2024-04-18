@@ -3,13 +3,13 @@ from shortwizard.editor_utils.audio import basique
 
 from shortwizard.editor_utils.audio import audio_maker
 
-class Audio:
+class Audio(Sequence):
     def __init__(self, file_path , basique: basique.Basique = basique.default, speed = 1) -> None:
         self.file_path = file_path
         self.basique = basique
         self.speed = speed
 
+        sequence = audio_maker.create_audio(self)
 
-    def render(self) -> Sequence:
+        super().__init__(sequence.start_time, sequence.duration, sequence.objects)
 
-        return audio_maker.create_audio(self)

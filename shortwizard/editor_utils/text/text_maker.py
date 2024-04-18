@@ -1,12 +1,15 @@
 import random
 
-from moviepy.editor import TextClip
+from moviepy.editor import TextClip, vfx
 
 from shortwizard.editor_utils.Sequence import Sequence
 from shortwizard.editor_utils.text import text_utils, texte
 from shortwizard.editor_utils.video import video_utils
 
 from shortwizard.editor_utils import colors as colors_manager
+
+from skimage.filters import gaussian
+
 
 
 def create_text_clip_list_dynamic(texte: 'texte.Texte', tts_duration) -> Sequence:

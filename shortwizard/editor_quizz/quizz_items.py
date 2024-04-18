@@ -33,34 +33,35 @@ class Background(Sequence):
 
         self.objects += [background]
 
+
 class Chrono(Sequence):
     def __init__(self):
         super().__init__(0)
 
         chrono = Image(root_assets / "image" / "chrono.png",
-                       ("center", 400), Basique(zoom=2), animation.battement).render()
-        
+                       ("center", 400), Basique(zoom=2), animation.battement)
+
         volume_reduction = basique.Basique(volume=0.1)
-        
-        sound = Audio(root_assets / "audio_effects" / "clock.mp3", basique=volume_reduction).render()
+
+        sound = Audio(root_assets / "audio_effects" / "clock.mp3",
+                      basique=volume_reduction)
 
         self.objects = [chrono, sound]
 
 
 class Annonce(Sequence):
-    def __init__(self, text_content, emote_name ,tts):
+    def __init__(self, text_content, emote_name, tts):
         super().__init__(0)
 
         annonce = Texte(text_content, ("center", 500),
-                        texte_grand_no_bg, tts, animation=True).render()
+                        texte_grand_no_bg, tts, animation=True)
 
         self.duration = annonce.duration-0.3
 
         emote_resize = Basique(mask_color=(4, 253, 45), zoom=0.4)
 
         emote = Video(root_assets / "video" / f"{emote_name}.mp4",
-                       ("center", 220), basique=emote_resize, animation=animation.slide).render()
-        emote.start_at(0).stop_at(annonce.duration-0.3)
+                      ("center", 220), basique=emote_resize, animation=animation.slide).set_start(0).set_end(annonce.duration-0.3)
 
         self.objects = [emote, annonce]
 
@@ -70,20 +71,19 @@ class Question(Sequence):
         super().__init__(0)
 
         question = Texte(text_content, ("center", 500),
-                         texte_grand_no_bg, tts, animation=True).render().start_at(0)
+                         texte_grand_no_bg, tts, animation=True).set_start(0)
 
         swoosh = mpe.AudioFileClip(root_assets /
                                    "audio_effects" / "swoosh.mp3").set_start(-0.2)
 
-        chrono = Chrono().start_at(question.duration).stop_at(question.duration-0.3+3)
+        chrono = Chrono().set_start(question.duration).set_end(question.duration-0.3+3)
 
         emote_resize = Basique(mask_color=(4, 253, 45), zoom=0.4)
 
         emotes = ["ne_sait_pas_homme", "ne_sait_pas_femme", "bizzare"]
 
         emote = Video(root_assets / "video" / f"{random.choice(emotes)}.mp4",
-                       ("center", 270), basique=emote_resize, animation=animation.slide).render()
-        emote.start_at(0).stop_at(question.duration-0.3)
+                      ("center", 270), basique=emote_resize, animation=animation.slide).set_start(0).set_end(question.duration-0.3)
 
         self.duration = question.duration-0.3+3
 
@@ -95,10 +95,10 @@ class Reponse(Sequence):
         super().__init__(0)
 
         reponse = Texte(text_content, ("center", 500),
-                        texte_grand_no_bg, tts, animation=True).render()
+                        texte_grand_no_bg, tts, animation=True)
 
-        reponse2 = Texte(text_content, position, texte_petit_white_bg_red.set_background_color(None, copy=True)).render(
-        ).start_at(reponse.duration)
+        reponse2 = Texte(text_content, position, texte_petit_white_bg_red.set_background_color(
+            None, copy=True)).set_start(reponse.duration)
 
         self.duration = reponse.duration-0.3+1
 

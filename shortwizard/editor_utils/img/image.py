@@ -4,13 +4,15 @@ from shortwizard.editor_utils.img import Basique, animation
 from shortwizard.editor_utils.img import image_maker
 
 
-class Image:
+class Image(Sequence):
     def __init__(self, file_path, position, basique: Basique.Basique = Basique.default, animation: animation.Animation | None = None) -> None:
         self.file_path = file_path
         self.position = position
         self.basique = basique
         self.animation = animation
 
-    def render(self) -> Sequence:
+        sequence = image_maker.create_image(self)
 
-        return image_maker.create_image(self)
+        super().__init__(sequence.start_time, sequence.duration, sequence.objects)
+
+
