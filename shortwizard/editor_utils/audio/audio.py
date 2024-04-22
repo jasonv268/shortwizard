@@ -11,5 +11,5 @@ class Audio(Sequence):
 
         sequence = audio_maker.create_audio(self)
 
-        super().__init__(sequence.start_time, sequence.duration, sequence.objects)
+        super().__init__(sequence.start, sequence.duration, sequence.objects)
 

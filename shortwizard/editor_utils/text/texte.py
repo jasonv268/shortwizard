@@ -35,7 +35,7 @@ class Texte(Sequence):
                 self.text_content = self.text_content.upper()
             sequence =  text_maker.create_text(self)
 
-        super().__init__(sequence.start_time, sequence.duration, sequence.objects)
+        super().__init__(sequence.start, sequence.duration, sequence.objects)
 
 
         

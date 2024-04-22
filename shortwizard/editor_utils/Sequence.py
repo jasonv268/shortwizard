@@ -4,8 +4,8 @@ import os
 
 class Sequence:
 
-    def __init__(self, start_time, duration=0, objects=None) -> None:
-        self.start_time = start_time
+    def __init__(self, start, duration=0, objects=None) -> None:
+        self.start = start
         self.duration = duration
         if objects:
             self.objects = objects
@@ -13,7 +13,7 @@ class Sequence:
             self.objects = []
 
     def set_end(self, stop_time):
-        self.duration = stop_time-self.start_time
+        self.duration = stop_time-self.start
         for index, obj in enumerate(self.objects):
             if isinstance(obj, mpe.VideoClip) or isinstance(obj, mpe.AudioClip):
                 if obj.duration is None or obj.start+obj.duration > stop_time:
@@ -65,8 +65,12 @@ class Sequence:
                 final_render = final_render.set_audio(final_render.audio)
             case True, True:
                 final_render = mpe.CompositeVideoClip(video_objects)
-                final_render = final_render.set_audio(
-                    mpe.CompositeAudioClip([final_render.audio]+audio_objects))
+                if final_render.audio:
+                    final_render = final_render.set_audio(
+                        mpe.CompositeAudioClip([final_render.audio]+audio_objects))
+                else:
+                    final_render = final_render.set_audio(
+                        mpe.CompositeAudioClip(audio_objects))
 
         if final_render:
             final_render = final_render.set_duration(self.duration)

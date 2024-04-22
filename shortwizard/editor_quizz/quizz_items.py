@@ -20,12 +20,12 @@ from shortwizard.editor_utils.audio.audio import Audio, basique
 
 from shortwizard.editor_utils.img import animation, image_utils
 
-from shortwizard.editor_utils import colors
+from shortwizard.editor_utils import colors, emotes
 
 
 class Background(Sequence):
-    def __init__(self, start_time, duration, video_background_path) -> None:
-        super().__init__(start_time, duration)
+    def __init__(self, start, duration, video_background_path) -> None:
+        super().__init__(start, duration)
 
         vbm = VideoBackgroundsManager(video_background_path)
 
@@ -50,7 +50,7 @@ class Chrono(Sequence):
 
 
 class Annonce(Sequence):
-    def __init__(self, text_content, emote_name, tts):
+    def __init__(self, text_content, emote_liste, tts):
         super().__init__(0)
 
         annonce = Texte(text_content, ("center", 500),
@@ -58,10 +58,10 @@ class Annonce(Sequence):
 
         self.duration = annonce.duration-0.3
 
-        emote_resize = Basique(mask_color=(4, 253, 45), zoom=0.4)
+        emote_num = random.choice(emote_liste)
 
-        emote = Video(root_assets / "video" / f"{emote_name}.mp4",
-                      ("center", 220), basique=emote_resize, animation=animation.slide).set_start(0).set_end(annonce.duration-0.3)
+        emote: Video = emotes.get_emote(emote_num).set_start(0).set_end(
+            annonce.duration-0.3).resize(0.4).set_position((400, 280)).set_animation(animation.slide)
 
         self.objects = [emote, annonce]
 
@@ -78,12 +78,10 @@ class Question(Sequence):
 
         chrono = Chrono().set_start(question.duration).set_end(question.duration-0.3+3)
 
-        emote_resize = Basique(mask_color=(4, 253, 45), zoom=0.4)
+        emote_num = random.choice([127,126,22,83])
 
-        emotes = ["ne_sait_pas_homme", "ne_sait_pas_femme", "bizzare"]
-
-        emote = Video(root_assets / "video" / f"{random.choice(emotes)}.mp4",
-                      ("center", 270), basique=emote_resize, animation=animation.slide).set_start(0).set_end(question.duration-0.3)
+        emote: Video = emotes.get_emote(emote_num).set_start(0).set_end(
+            question.duration).resize(0.4).set_position((400, 280)).set_animation(animation.slide)
 
         self.duration = question.duration-0.3+3
 

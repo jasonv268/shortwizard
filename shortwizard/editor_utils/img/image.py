@@ -13,6 +13,6 @@ class Image(Sequence):
 
         sequence = image_maker.create_image(self)
 
-        super().__init__(sequence.start_time, sequence.duration, sequence.objects)
+        super().__init__(sequence.start, sequence.duration, sequence.objects)
 
 
