@@ -28,10 +28,10 @@ class QuizzList5Q(Quizz):
         t = 0
 
         anchor_tag = Texte(
-            "@quizz_pour_tous", ("center", 1700), texte_petit_black_bg_white).set_start(0)
+            "@quizz_pour_tous", ("center", 1700), (900, 1920), texte_petit_black_bg_white).set_start(0)
 
         anchor_title = Texte(
-            self.json_quizz["titre"], ("center", 100), texte_petit_white_bg_red.set_font_size(80, copy=True)).set_start(0)
+            self.json_quizz["titre"], ("center", 100), (900, 1920), texte_petit_white_bg_red.set_font_size(80, copy=True)).set_start(0)
 
         self.sequence.objects += [anchor_tag, anchor_title]
 
@@ -41,20 +41,20 @@ class QuizzList5Q(Quizz):
         y_anchor_position = 850
 
         anchor_infos = Sequence(t)
-        anchor_infos.objects += [Texte("FACILE", (100, y_anchor_position), texte_petit_white_bg_red.set_background_color(colors.GREEN, copy=True)),
-                                 Texte("1)", (100, y_anchor_position+100),
+        anchor_infos.objects += [Texte("FACILE", (100, y_anchor_position), (900, 1920), texte_petit_white_bg_red.set_background_color(colors.GREEN, copy=True)),
+                                 Texte("1)", (100, y_anchor_position+100), (900, 1920),
                                        texte_petit_white_bg_red.set_background_color(None, copy=True)),
-                                 Texte("2)", (100, y_anchor_position+200),
+                                 Texte("2)", (100, y_anchor_position+200), (900, 1920),
                                        texte_petit_white_bg_red.set_background_color(None, copy=True)),
-                                 Texte("MOYEN", (100, y_anchor_position+300), texte_petit_white_bg_red.set_background_color(
+                                 Texte("MOYEN", (100, y_anchor_position+300), (900, 1920), texte_petit_white_bg_red.set_background_color(
                                      colors.ORANGE, copy=True)),
-                                 Texte("3)", (100, y_anchor_position+400),
+                                 Texte("3)", (100, y_anchor_position+400), (900, 1920),
                                        texte_petit_white_bg_red.set_background_color(None, copy=True)),
-                                 Texte("4)", (100, y_anchor_position+500),
+                                 Texte("4)", (100, y_anchor_position+500), (900, 1920),
                                        texte_petit_white_bg_red.set_background_color(None, copy=True)),
-                                 Texte("DIFFICILE", (100, y_anchor_position+600),
+                                 Texte("DIFFICILE", (100, y_anchor_position+600), (900, 1920),
                                        texte_petit_white_bg_red.set_background_color(colors.RED, copy=True)),
-                                 Texte("5)", (100, y_anchor_position+700),
+                                 Texte("5)", (100, y_anchor_position+700), (900, 1920),
                                        texte_petit_white_bg_red.set_background_color(None, copy=True))]
 
         anchor_infos.set_start(t)
@@ -130,8 +130,12 @@ class QuizzList5Q(Quizz):
         sequence_questions.set_end(t)
 
         masque = Basique(mask_color=(87, 181, 15))
-        abonne_toi = Video(root_assets / "video" / "follow.mp4",
-                           ("center", 750), basique=masque, speed=1.8).set_start(t-0.5)
+        abonne_toi = Video(root_assets / "video" / "follow.mp4")
+        abonne_toi.set_position(("center", 750))
+        abonne_toi.set_speed(1.8)
+        abonne_toi.set_basique(masque)
+        abonne_toi.set_start(t-0.5)
+
         an1 = Annonce("Je sors 2 quiz par jour !", [
                       1], self.ia_tts).set_start(t)
         t += an1.duration

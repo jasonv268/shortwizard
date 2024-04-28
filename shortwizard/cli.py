@@ -29,7 +29,7 @@ def init() -> None:
    
 
 @app.command()
-def edit_quizz_list5q(
+def edit_quiz_list5q(
     video_backgrounds_dir_path: Path,
     quizzs_path: Path,
     lang: str = typer.Option(default="fr-fr", help="IA language code."),
@@ -43,16 +43,17 @@ def edit_quizz_list5q(
     
 
 @app.command()
-def edit_astrologie(
+def edit_quiz_choice5q(
     video_backgrounds_dir_path: Path,
     quizzs_path: Path,
-    lang: str = typer.Option(default=None, help="IA language code."),
+    lang: str = typer.Option(default="fr-fr", help="IA language code."),
+    ia: str = typer.Option(default="google-low", help="IA name."),
 ) -> None:
     typer.echo(
-        f"Editing Astrologie{video_backgrounds_dir_path},{quizzs_path}, {lang}"
+        f"Editing Quizzs Couple{video_backgrounds_dir_path},{quizzs_path}, {ia},{lang}"
     )
-    # editorAstrologie.make_shorts_ASTRO(video_backgrounds_dir_path,
-    #                                quizzs_path, lang, Path.cwd())
+    editorQuizz.make_shorts_CHOICE5Q(video_backgrounds_dir_path,
+                                   quizzs_path, ia ,lang, Path.cwd())
 
 
 def _version_callback(value: bool) -> None:

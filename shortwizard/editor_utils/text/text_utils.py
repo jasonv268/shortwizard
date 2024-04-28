@@ -3,6 +3,8 @@ import numpy as np
 import moviepy.editor as mpe
 from PIL import Image, ImageDraw, ImageColor
 
+from shortwizard.editor_utils.text import texte
+
 
 def create_text_background(size, radius, color):
 
@@ -32,6 +34,7 @@ def create_text_background(size, radius, color):
 
 
 def diviser_texte(texte, longueur_max):
+    # 
     mots = texte.split(' ')
     parties = []
     partie_actuelle = ""
@@ -48,15 +51,22 @@ def diviser_texte(texte, longueur_max):
     if partie_actuelle:  # Ajoute la dernière partie
         parties.append(partie_actuelle)
 
+    
+
     return parties
 
 
-def get_chars_per_line(font_size):
-    if 0 < font_size <= 70:
-        return 19
-    elif 70 < font_size <= 80:
-        return 17
-    elif 80 < font_size <= 90:
-        return 15
+def get_chars_per_line(texte: 'texte.Texte'):
+
+    text_clip = mpe.TextClip(
+        texte.text_content, fontsize=texte.basique.font_size, color=texte.basique.filling_color)
+
+    length = text_clip.w
+
+    
+
+    if length > texte.size[0]:
+        return int(len(texte.text_content) * texte.size[0] / length)
     else:
-        return 13
+        
+        return len(texte.text_content)+1

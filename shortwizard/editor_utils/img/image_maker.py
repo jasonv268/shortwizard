@@ -19,8 +19,8 @@ def create_image(img: 'image.Image')->Sequence:
     if(img.basique.opacity != 1.0):
         image_clip = image_clip.set_opacity(img.basique.opacity)
 
-    if (img.basique.zoom != 1.0):
-        image_clip = image_clip.resize(img.basique.zoom)
+    if (img.basique.resize != 1.0):
+        image_clip = image_clip.resize(img.basique.resize)
 
     if (img.animation):
         if (img.animation.size_func):

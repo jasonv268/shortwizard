@@ -16,7 +16,7 @@ def create_text_clip_list_dynamic(texte: 'texte.Texte', tts_duration) -> Sequenc
 
     sequence = Sequence(0)
 
-    chars_per_line = text_utils.get_chars_per_line(texte.basique.font_size)
+    chars_per_line = text_utils.get_chars_per_line(texte)
 
     list = text_utils.diviser_texte(texte.text_content, chars_per_line)
 
@@ -108,7 +108,7 @@ def create_text_clip_list_dynamic(texte: 'texte.Texte', tts_duration) -> Sequenc
 def create_text(texte: 'texte.Texte') -> Sequence:
     sequence = Sequence(0)
 
-    chars_per_line = text_utils.get_chars_per_line(texte.basique.font_size)
+    chars_per_line = text_utils.get_chars_per_line(texte)
 
     list = text_utils.diviser_texte(texte.text_content, chars_per_line)
 

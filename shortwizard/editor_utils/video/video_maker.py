@@ -1,4 +1,4 @@
-from moviepy.editor import VideoFileClip, concatenate_videoclips, vfx
+from moviepy.editor import VideoFileClip, concatenate_videoclips, vfx, CompositeVideoClip
 
 from shortwizard.editor_utils.Sequence import Sequence
 from shortwizard.editor_utils.video import VideoBackgroundsManager
@@ -6,38 +6,7 @@ from shortwizard.editor_utils.video import video_utils
 from shortwizard.editor_utils.video import Video
 from shortwizard.editor_utils.img import image_utils
 
-
-def create_video(video: 'Video.Video')->Sequence:
-
-    sequence = Sequence(0)
-
-    video_clip: VideoFileClip = VideoFileClip(video.file_path, has_mask=video.basique.has_mask).set_start(0)
-
-    if (video.basique.mask_color):
-        video_clip = image_utils.remove_green_screen(video_clip, video.basique.mask_color)
-
-    if (video.speed!=1.0):
-        video_clip = video_clip.fx(vfx.speedx, video.speed)
-
-    # if video.position[0] =="center":
-    #     video.position = (540 - video_clip.size[0]//2, video.position[1])
-
-    video_clip = video_clip.set_position(video.position)
-
-    # if (video.animation):
-    #     if (video.animation.size_func):
-    #         video_clip = video_clip.resize(video.animation.size_func)
-
-    #     if (video.animation.position_func):
-
-    #         position_fun = lambda t: video.animation.position_func(video.position[0], video.position[1], t)
-
-    #         video_clip = video_clip.set_position(position_fun)
-
-
-    sequence.objects = [video_clip]
-
-    return sequence
+from shortwizard.config import root_assets
 
 
 def create_bg(vbm: VideoBackgroundsManager.VideoBackgroundsManager, short_duration):
@@ -48,12 +17,17 @@ def create_bg(vbm: VideoBackgroundsManager.VideoBackgroundsManager, short_durati
 
     bg_clip = video_utils.fade_in_out_bg(bg_clip)
 
-    #bg_clip = video_utils.blur(bg_clip, 1)
+
+    rush_effect = VideoFileClip(
+        root_assets / "video" / "fire.mp4").set_opacity(0.7)
+
+    rush_effect = image_utils.remove_green_screen(rush_effect, (0, 255, 0))
+
+    bg_clip = CompositeVideoClip([bg_clip, rush_effect.set_position("center")])
 
     if bg_clip.duration > short_duration:
         bg_clip = bg_clip.subclip(0, short_duration)
         bg_clip = video_utils.fade_in_out_bg(bg_clip)
-        #bg_clip = video_utils.blur(bg_clip, 1)
 
     else:
         while bg_clip.duration < short_duration:
@@ -70,4 +44,3 @@ def create_bg(vbm: VideoBackgroundsManager.VideoBackgroundsManager, short_durati
     bg_clip = bg_clip.without_audio()
 
     return bg_clip
-

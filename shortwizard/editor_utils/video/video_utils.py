@@ -1,9 +1,8 @@
 import math
 from PIL import Image
 import numpy
-from moviepy.editor import concatenate_videoclips, VideoFileClip, vfx, ImageSequenceClip
+from moviepy.editor import concatenate_videoclips, VideoFileClip, vfx, ImageSequenceClip, CompositeVideoClip
 from skimage.filters import gaussian
-
 
 
 def crop_bg(bg_clip):
@@ -18,32 +17,43 @@ def crop_bg(bg_clip):
 
 
 def resize(clip, w, h):
-    
+
     clip.w = clip.w * w
     clip.h = clip.h * h
 
     return clip
 
 
-def blur(clip, duration):
+def blur(clip, t1, t2):
     def dynamic_blur(image, t):
         """ Returns a dynamically blurred version of the image """
         max_blur_radius = 50  # Rayon maximal de flou
-        blur_radius = max_blur_radius * (1 - t / duration)  # Flou décroissant avec le temps
-        # Assurez-vous que le flou tombe bien à 0 à la fin de la période de flou
-        blur_radius = max(blur_radius, 0)
+        if t1 == 0:
+            b = 50
+        else:
+
+            b = 1 - t2/t1
+            b = (50 * t2 / t1) / b
+
+        a = -b/t2
+
+        blur_radius = max(a*t + b, 0)
+
+        print(blur_radius)
         # Interpolation gaussienne pour une transition plus douce
         return gaussian(image.astype(float), sigma=blur_radius)
 
-    blur_clip = clip.subclip(0, duration)
-    
-    # Appliquer le flou dynamique à chaque trame de la période de flou
-    blurred_frames = [dynamic_blur(frame, t) for t, frame in blur_clip.iter_frames(with_times=True)]
-    blurred_clip = ImageSequenceClip(blurred_frames, fps=clip.fps)
-    
-    # Concaténer la vidéo floue avec la vidéo originale après la période de flou
-    return concatenate_videoclips([blurred_clip, clip.set_start(duration)])
+    blur_clip = clip.subclip(t1, t2+1)
 
+    no_blur = clip.subclip(t2+1, clip.duration)
+
+    # Appliquer le flou dynamique à chaque trame de la période de flou
+    blurred_frames = [dynamic_blur(
+        frame, t) for t, frame in blur_clip.iter_frames(with_times=True)]
+    blurred_clip = ImageSequenceClip(blurred_frames, fps=clip.fps)
+
+    # Concaténer la vidéo floue avec la vidéo originale après la période de flou
+    return concatenate_videoclips([blurred_clip, no_blur])
 
 
 def zoom_in(clip, zoom_ratio=0.04):
@@ -96,6 +106,7 @@ def fade_in_out_bg(bg_clip):
 
     return bg_clip
 
+
 def zoom(t, duration):
     # Starting scale factor
     start_scale = 1
@@ -103,10 +114,7 @@ def zoom(t, duration):
     end_scale = 1.2
 
     # Calculate the scaling factor based on elapsed time and total duration
-    scale_factor = start_scale + min(t / duration, 1.0) * (end_scale - start_scale)
+    scale_factor = start_scale + \
+        min(t / duration, 1.0) * (end_scale - start_scale)
 
     return scale_factor
-
-
-
-

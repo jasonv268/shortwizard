@@ -3,6 +3,7 @@ from pathlib import Path
 import time
 
 from shortwizard.editor_quizz import QuizzList5Q
+from shortwizard.editor_quizz import QuizzChoice5Q
 
 from shortwizard.ShortManager import ShortManager
 
@@ -13,7 +14,7 @@ from shortwizard.file_manager import file_manager
 
 class QuizzType(Enum):
     DYNAMIC5Q = 0
-    COUPLE = 1
+    CHOICE5Q = 1
     LIST5Q = 2
 
 
@@ -21,6 +22,12 @@ def make_shorts_LIST5Q(video_backgrounds_dir_path, quizzs_path, ia, language, ou
 
     make_shorts(video_backgrounds_dir_path,
                 quizzs_path, ia ,language, output_path,  QuizzType.LIST5Q)
+    
+def make_shorts_CHOICE5Q(video_backgrounds_dir_path, quizzs_path, ia, language, output_path):
+
+    make_shorts(video_backgrounds_dir_path,
+                quizzs_path, ia ,language, output_path,  QuizzType.CHOICE5Q)
+
 
 
 def make_shorts(video_backgrounds_dir_path, quizzs_path, ia, language, output_path, mode: QuizzType):
@@ -45,6 +52,8 @@ def make_shorts(video_backgrounds_dir_path, quizzs_path, ia, language, output_pa
     match mode:
         case QuizzType.LIST5Q:
             QuizzClass = QuizzList5Q.QuizzList5Q
+        case QuizzType.CHOICE5Q:
+            QuizzClass = QuizzChoice5Q.QuizzChoice5Q
         case _:
             raise ValueError("quizz_type error")
 
@@ -57,9 +66,8 @@ def make_shorts(video_backgrounds_dir_path, quizzs_path, ia, language, output_pa
 
     while sm.has_next_short():
 
-        match mode:
-            case QuizzType.LIST5Q:
-                quizz :QuizzList5Q.QuizzList5Q = sm.get_next_short()
+
+        quizz = sm.get_next_short()
 
         file_name = f"{quizz.get_number()}_{quizz.get_title()}"
 

@@ -4,13 +4,10 @@ import os
 
 class Sequence:
 
-    def __init__(self, start, duration=0, objects=None) -> None:
+    def __init__(self, start) -> None:
         self.start = start
-        self.duration = duration
-        if objects:
-            self.objects = objects
-        else:
-            self.objects = []
+        self.duration = None
+        self.objects = []
 
     def set_end(self, stop_time):
         self.duration = stop_time-self.start
@@ -27,7 +24,6 @@ class Sequence:
 
         for index, obj in enumerate(self.objects):
             if isinstance(obj, mpe.VideoClip) or isinstance(obj, mpe.AudioClip):
-
                 self.objects[index] = obj.set_start(obj.start+start_time)
             elif isinstance(obj, Sequence):
 
@@ -46,7 +42,7 @@ class Sequence:
             if isinstance(obj, Sequence):
                 for o in obj.objects:
                     get_all_objects(o)
-                    
+
             else:
                 if isinstance(obj, mpe.VideoClip):
                     video_objects.append(obj)

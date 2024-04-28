@@ -4,12 +4,13 @@ from shortwizard.editor_utils.Sequence import Sequence
 from shortwizard.editor_utils.text import text_maker
 
 
-
 class Texte(Sequence):
-    def __init__(self, text_content, position=("center", "center"), basique: Basique.Basique = Basique.default, tts: tts.Tts | None = None, animation=None) -> None:
+    def __init__(self, text_content, position=("center", "center"), size=(1080, 1920), basique: Basique.Basique = Basique.default, tts: tts.Tts | None = None, animation=None) -> None:
 
         self.text_content = text_content
         self.position = position
+        self.size = size
+
         self.basique = basique
         self.tts = tts
         self.animation = animation
@@ -22,7 +23,8 @@ class Texte(Sequence):
                 self.text_content = self.text_content.upper()
 
             if self.animation:
-                texte = text_maker.create_text_clip_list_dynamic(self, audio.duration)
+                texte = text_maker.create_text_clip_list_dynamic(
+                    self, audio.duration)
             else:
                 texte = text_maker.create_text(self)
 
@@ -33,9 +35,9 @@ class Texte(Sequence):
         else:
             if self.basique.upper:
                 self.text_content = self.text_content.upper()
-            sequence =  text_maker.create_text(self)
+            sequence = text_maker.create_text(self)
 
-        super().__init__(sequence.start, sequence.duration, sequence.objects)
+        super().__init__(sequence.start)
 
-
-        
+        self.duration = sequence.duration
+        self.objects = sequence.objects
